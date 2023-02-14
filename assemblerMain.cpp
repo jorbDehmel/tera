@@ -24,8 +24,26 @@ int main(const int argc, const char *argv[])
              << tags::reset;
         return 1;
     }
+    string inputFileName = argv[1];
+    string outputFileName = argv[2];
 
-    ifstream in(argv[1]);
+    // Look for .tasl suffix on input
+    if (inputFileName.size() < 5 || inputFileName.substr(inputFileName.size() - 5) != ".tasl")
+    {
+        cout << tags::yellow_bold
+             << "Warning! The proper file suffix for ternary assembly files is .tasl\n"
+             << tags::reset;
+    }
+
+    // Look for .ter suffix on output
+    if (outputFileName.size() < 5 || outputFileName.substr(outputFileName.size() - 5) != ".tera")
+    {
+        cout << tags::yellow_bold
+             << "Warning! The proper file suffix for ternary compiled files is .tera\n"
+             << tags::reset;
+    }
+
+    ifstream in(inputFileName);
 
     if (!in.is_open())
     {
@@ -58,7 +76,7 @@ int main(const int argc, const char *argv[])
          << tags::reset;
 
     // Write to file
-    ofstream out(argv[2]);
+    ofstream out(outputFileName);
 
     if (!out.is_open())
     {

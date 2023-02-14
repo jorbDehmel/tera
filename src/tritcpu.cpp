@@ -18,20 +18,22 @@ TritCpu::TritCpu()
 {
     *instrPointer = MEMSIZE;
 
-    for (int i = 0; i < 27; i++)
+    sectors[0] = mem;
+    for (int i = 1; i < 27; i++)
     {
         sectors[i] = nullptr;
     }
     return;
 }
 
-TritCpu::TritCpu(tryte *Sectors[27])
+TritCpu::TritCpu(tryte *Sectors[26])
 {
     *instrPointer = MEMSIZE;
 
-    for (int i = 0; i < 27; i++)
+    sectors[0] = mem;
+    for (int i = 1; i < 27; i++)
     {
-        sectors[i] = Sectors[i];
+        sectors[i] = Sectors[i - 1];
     }
     return;
 }
@@ -53,22 +55,23 @@ int TritCpu::doInstr()
     addr = mem + *instrPointer + 1;
     lit = mem + *instrPointer + 2;
 
+    int temp;
     switch (*instr)
     {
     case kill:
         return -1;
         break;
     case put:
-        mem[*addr] = *lit;
+        curSector[*addr] = *lit;
         break;
     case cpy:
-        mem[*lit] = mem[*addr];
+        curSector[*lit] = curSector[*addr];
         break;
     case incr:
-        mem[*addr] += *lit;
+        curSector[*addr] += *lit;
         break;
     case decr:
-        mem[*addr] -= *lit;
+        curSector[*addr] -= *lit;
         break;
     case jump:
         if (*addr != tryte(0))
@@ -97,12 +100,12 @@ int TritCpu::doInstr()
         }
         break;
     case endif:
-        throw runtime_error("Unimplemented");
+        throw runtime_error("Unmatched endif instruction");
         break;
     case andEq:
         if (*controlBuffer != tryte(0))
         {
-            if (mem[*addr] == *lit)
+            if (curSector[*addr] == *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -115,7 +118,7 @@ int TritCpu::doInstr()
     case andNeq:
         if (*controlBuffer != tryte(0))
         {
-            if (mem[*addr] == *lit)
+            if (curSector[*addr] == *lit)
             {
                 *controlBuffer = tryte(0);
             }
@@ -128,7 +131,7 @@ int TritCpu::doInstr()
     case andLess:
         if (*controlBuffer != tryte(0))
         {
-            if (mem[*addr] < *lit)
+            if (curSector[*addr] < *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -141,7 +144,7 @@ int TritCpu::doInstr()
     case andGreater:
         if (*controlBuffer != tryte(0))
         {
-            if (mem[*addr] > *lit)
+            if (curSector[*addr] > *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -154,7 +157,7 @@ int TritCpu::doInstr()
     case orEq:
         if (*controlBuffer == tryte(0))
         {
-            if (mem[*addr] == *lit)
+            if (curSector[*addr] == *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -167,7 +170,7 @@ int TritCpu::doInstr()
     case orNeq:
         if (*controlBuffer == tryte(0))
         {
-            if (mem[*addr] == *lit)
+            if (curSector[*addr] == *lit)
             {
                 *controlBuffer = tryte(0);
             }
@@ -180,7 +183,7 @@ int TritCpu::doInstr()
     case orLess:
         if (*controlBuffer == tryte(0))
         {
-            if (mem[*addr] < *lit)
+            if (curSector[*addr] < *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -193,7 +196,7 @@ int TritCpu::doInstr()
     case orGreater:
         if (*controlBuffer == tryte(0))
         {
-            if (mem[*addr] > *lit)
+            if (curSector[*addr] > *lit)
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -202,6 +205,46 @@ int TritCpu::doInstr()
                 *controlBuffer = tryte(0);
             }
         }
+        break;
+    case out:
+        for (tryte i = 0; i < *lit; i++)
+        {
+            switch (curSector[*addr + i][8])
+            {
+            case zero: // positive int
+                cout << (int)curSector[*addr] << '\n';
+                break;
+            case one: // negative int
+                cout << '-' << (int)curSector[*addr] << '\n';
+                break;
+            case two: // char
+                cout << (char)((int)curSector[*addr]);
+                break;
+            }
+        }
+
+        break;
+    case inp:
+        for (tryte i = 0; i < *lit; i++)
+        {
+            cin >> temp;
+            curSector[*addr + i] = temp;
+        }
+
+        break;
+    case sector:
+        if (*addr != tryte(0))
+        {
+            curSector = sectors[*addr % tryte(27)];
+        }
+        else
+        {
+            curSector = mem;
+        }
+        break;
+
+    default:
+        throw runtime_error("Could not process invalid command");
         break;
     }
 

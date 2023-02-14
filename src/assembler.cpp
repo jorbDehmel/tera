@@ -10,7 +10,7 @@ MIT licence via mit-license.org held by author
 
 Assembler::Assembler()
 {
-    firstOpenAddress = tryte(0);
+    firstOpenAddress = tryte(27);
 
     // Build instruction table
     instructions["kill"] = kill;
@@ -35,6 +35,10 @@ Assembler::Assembler()
 
     instructions["orLess"] = orLess;
     instructions["orGreater"] = orGreater;
+    instructions["out"] = out;
+
+    instructions["inp"] = inp;
+    instructions["sector"] = sector;
 
     return;
 }

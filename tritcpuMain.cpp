@@ -8,6 +8,7 @@ MIT licence via mit-license.org held by author
 
 #include <iostream>
 #include <fstream>
+#include <chrono>
 #include "src/trit.hpp"
 #include "src/tritcpu.hpp"
 #include "src/tryteMath.hpp"
@@ -24,8 +25,17 @@ int main(const int argc, const char *argv[])
              << tags::reset;
         return 1;
     }
+    string inputFileName = argv[1];
 
-    ifstream in(argv[1]);
+    // Look for .ter suffix on output
+    if (inputFileName.size() < 5 || inputFileName.substr(inputFileName.size() - 5) != ".tera")
+    {
+        cout << tags::yellow_bold
+             << "Warning! The proper file suffix for ternary compiled files is .tera\n"
+             << tags::reset;
+    }
+
+    ifstream in(inputFileName);
 
     if (!in.is_open())
     {
@@ -53,12 +63,8 @@ int main(const int argc, const char *argv[])
     // Run
     while (c.doInstr() == 0)
     {
-        cout << "tick\n";
+        // This comment to make this loop less nasty
     }
-
-    cout << tags::green_bold
-         << "Done.\n"
-         << tags::reset;
 
     return 0;
 }
