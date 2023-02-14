@@ -11,6 +11,13 @@ Instruction layout:
 1 tryte instr
 1 tryte addr
 1 tryte literal
+
+Buffers:
+0 - instrPointer
+1 - controlBuffer
+2 - sectorBuffer
+
+27 - first free
 */
 
 #ifndef TRITCPU_HPP
@@ -26,10 +33,27 @@ Instruction layout:
 enum instr
 {
     kill = 0,
-
     put,
-    copy,
+    cpy,
 
+    incr,
+    decr,
+    jump,
+
+    jumpBack,
+    ifControl,
+    endif,
+
+    andEq,
+    andNeq,
+    andLess,
+
+    andGreater,
+    orEq,
+    orNeq,
+
+    orLess,
+    orGreater,
 };
 
 // Makes intr into short and casts to tryte
@@ -38,9 +62,17 @@ tryte castInstr(instr what);
 class TritCpu
 {
 public:
+    TritCpu();
+    TritCpu(tryte *Sectors[27]);
+
+    int doInstr();
+
     tryte mem[MEMSIZE + INSTRSIZE];
+    tryte *sectors[27];
 
     tryte *instrPointer = mem;
+    tryte *controlBuffer = mem + 1;
+    tryte *sectorBuffer = mem + 2;
 };
 
 #endif

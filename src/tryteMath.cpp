@@ -15,11 +15,27 @@ void incrTrit(tryte &toIncr, const int &index, const trit &by)
         return;
     }
 
-    if ((int)by + (int)toIncr[index] > 2)
+    if (by + toIncr[index] > 2)
     {
         incrTrit(toIncr, index + 1, one);
     }
-    toIncr.set(index, (trit)((int)by + (int)toIncr[index] % 2));
+    toIncr.set(index, (trit)((by + toIncr[index]) % 3));
+
+    return;
+}
+
+void decrTrit(tryte &toDecr, const int &index, const trit &by)
+{
+    if (index > 8 || by == zero)
+    {
+        return;
+    }
+
+    if (toDecr[index] - by < 0)
+    {
+        decrTrit(toDecr, index + 1, one);
+    }
+    toDecr.set(index, (trit)((toDecr[index] - by + 3) % 3));
 
     return;
 }
@@ -39,8 +55,14 @@ tryte operator+(const tryte &A, const tryte &B)
 
 tryte operator-(const tryte &A, const tryte &B)
 {
-    throw runtime_error("unimplemented");
-    return tryte(0);
+    tryte out(A);
+
+    for (int i = 0; i < 9; i++)
+    {
+        decrTrit(out, i, B[i]);
+    }
+
+    return out;
 }
 
 tryte operator*(const tryte &A, const tryte &B)
@@ -67,7 +89,7 @@ tryte operator<<(const tryte &What, const int &By)
     tryte out(0);
     for (int i = 0; i < 8; i++)
     {
-        out.set(i + 1, What[i]);
+        out.set((i + By) % 9, What[i]);
     }
 
     return out;
@@ -78,35 +100,46 @@ tryte operator>>(const tryte &What, const int &By)
     tryte out(0);
     for (int i = 0; i < 8; i++)
     {
-        out.set(i, What[i + 1]);
+        out.set(i, What[(i + By) % 9]);
     }
 
     return out;
 }
 
-tryte &operator++(tryte &a)
+tryte operator++(tryte &a)
 {
     incrTrit(a, 0, one);
     return a;
 }
 
-tryte &operator++(tryte &a, int)
+tryte operator++(tryte &a, int)
 {
     tryte out(a);
     incrTrit(a, 0, one);
     return out;
 }
 
-tryte &operator--(tryte &a)
+tryte operator--(tryte &a)
 {
-    throw runtime_error("unimplemented");
-    tryte out(0);
+    decrTrit(a, 0, one);
+    return a;
+}
+
+tryte operator--(tryte &a, int)
+{
+    tryte out(a);
+    decrTrit(a, 0, one);
     return out;
 }
 
-tryte &operator--(tryte &a, int)
+tryte operator+=(tryte &a, tryte &by)
 {
-    throw runtime_error("unimplemented");
-    tryte out(0);
-    return out;
+    a = (a + by);
+    return a;
+}
+
+tryte operator-=(tryte &a, tryte &by)
+{
+    a = (a - by);
+    return a;
 }

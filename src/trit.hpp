@@ -59,6 +59,9 @@ public:
     bool operator<=(const tryte &other);
     bool operator>=(const tryte &other);
 
+    tryte &operator+=(const tryte &by);
+    tryte &operator-=(const tryte &by);
+
 protected:
     short data = 0;
 };

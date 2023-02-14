@@ -161,6 +161,18 @@ bool tryte::operator>=(const tryte &other)
     return true;
 }
 
+tryte &tryte::operator+=(const tryte &by)
+{
+    data += by.data;
+    return;
+}
+
+tryte &tryte::operator-=(const tryte &by)
+{
+    data -= by.data;
+    return;
+}
+
 vector<tryte> trytesFromBase27(const string &Base27)
 {
     string key = "0123456789abcdefghijklmnopq";
@@ -169,7 +181,7 @@ vector<tryte> trytesFromBase27(const string &Base27)
     for (int i = 0; i < Base27.size(); i += 3)
     {
         // Convert to decimal
-        short dec = key.find(Base27[i + 2]) + (key.find(Base27[i + 1]) * 9) + (key.find(Base27[i]) * 27);
+        short dec = key.find(Base27[i + 2]) + (key.find(Base27[i + 1]) * 27) + (key.find(Base27[i]) * 27 * 27);
 
         // Append ternary equivolent of decimal
         out.push_back(tryte(dec));
@@ -190,7 +202,7 @@ vector<tryte> rawParseTrytes(const string &From)
         }
 
         // Convert to decimal
-        short dec = From[i + 2] + (From[i + 1] * 9) + (From[i] * 27);
+        short dec = From[i + 2] + (From[i + 1] * 27) + (From[i] * 27 * 27);
 
         // Append ternary equivolent of decimal
         out.push_back(tryte(dec));
@@ -215,6 +227,11 @@ string to_string(const tryte &What)
         case two:
             out = "2" + out;
             break;
+        }
+
+        if (i == 2 || i == 5)
+        {
+            out = "'" + out;
         }
     }
 

@@ -23,9 +23,9 @@ tryte operator<<(const tryte &What, const int &By);
 tryte operator>>(const tryte &What, const int &By);
 
 // Increment operators
-tryte &operator++(tryte &a);      // pre
-tryte &operator++(tryte &a, int); // post
-tryte &operator--(tryte &a);      // pre
-tryte &operator--(tryte &a, int); // post
+tryte operator++(tryte &a);      // pre
+tryte operator++(tryte &a, int); // post
+tryte operator--(tryte &a);      // pre
+tryte operator--(tryte &a, int); // post
 
 #endif
