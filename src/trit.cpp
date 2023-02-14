@@ -164,13 +164,13 @@ bool tryte::operator>=(const tryte &other)
 tryte &tryte::operator+=(const tryte &by)
 {
     data += by.data;
-    return;
+    return *this;
 }
 
 tryte &tryte::operator-=(const tryte &by)
 {
     data -= by.data;
-    return;
+    return *this;
 }
 
 vector<tryte> trytesFromBase27(const string &Base27)

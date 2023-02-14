@@ -24,6 +24,7 @@ Buffers:
 #define TRITCPU_HPP
 
 #include "tryteMath.hpp"
+#include <vector>
 
 #define MEMSIZE 19'683
 #define INSTRSIZE 19'683
@@ -65,6 +66,8 @@ public:
     TritCpu();
     TritCpu(tryte *Sectors[27]);
 
+    void loadProgram(vector<tryte> &Program);
+
     int doInstr();
 
     tryte mem[MEMSIZE + INSTRSIZE];
@@ -73,6 +76,9 @@ public:
     tryte *instrPointer = mem;
     tryte *controlBuffer = mem + 1;
     tryte *sectorBuffer = mem + 2;
+
+protected:
+    void jumpIf();
 };
 
 #endif

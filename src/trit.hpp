@@ -37,6 +37,18 @@ public:
     tryte(const tryte &Other);
     tryte(const short &What);
 
+    tryte &operator=(const tryte &Other)
+    {
+        data = Other.data;
+        return *this;
+    }
+
+    tryte &operator=(const short &Other)
+    {
+        data = Other;
+        return *this;
+    }
+
     operator int() const
     {
         return data;

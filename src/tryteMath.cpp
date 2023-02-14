@@ -73,14 +73,28 @@ tryte operator*(const tryte &A, const tryte &B)
 
 tryte operator/(const tryte &A, const tryte &B)
 {
-    throw runtime_error("unimplemented");
-    return tryte(0);
+    tryte out(0);
+    tryte temp(A);
+
+    while (temp >= B)
+    {
+        temp -= B;
+        out++;
+    }
+
+    return out;
 }
 
 tryte operator%(const tryte &A, const tryte &B)
 {
-    throw runtime_error("unimplemented");
-    return tryte(0);
+    tryte temp(A);
+
+    while (temp >= B)
+    {
+        temp -= B;
+    }
+
+    return temp;
 }
 
 // Bitshift operators
@@ -100,7 +114,8 @@ tryte operator>>(const tryte &What, const int &By)
     tryte out(0);
     for (int i = 0; i < 8; i++)
     {
-        out.set(i, What[(i + By) % 9]);
+        if (i + By < 9)
+            out.set(i, What[i + By]);
     }
 
     return out;

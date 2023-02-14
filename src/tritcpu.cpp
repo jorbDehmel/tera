@@ -10,10 +10,14 @@ MIT licence via mit-license.org held by author
 
 tryte castInstr(instr what)
 {
+    tryte out = tryte((short)what);
+    return out;
 }
 
 TritCpu::TritCpu()
 {
+    *instrPointer = MEMSIZE;
+
     for (int i = 0; i < 27; i++)
     {
         sectors[i] = nullptr;
@@ -23,6 +27,8 @@ TritCpu::TritCpu()
 
 TritCpu::TritCpu(tryte *Sectors[27])
 {
+    *instrPointer = MEMSIZE;
+
     for (int i = 0; i < 27; i++)
     {
         sectors[i] = Sectors[i];
@@ -30,9 +36,19 @@ TritCpu::TritCpu(tryte *Sectors[27])
     return;
 }
 
+void TritCpu::loadProgram(vector<tryte> &Program)
+{
+    for (int i = 0; i < Program.size(); i++)
+    {
+        mem[(int)(*instrPointer) + i] = Program[i];
+    }
+    return;
+}
+
 int TritCpu::doInstr()
 {
     tryte *instr, *addr, *lit;
+
     instr = mem + *instrPointer;
     addr = mem + *instrPointer + 1;
     lit = mem + *instrPointer + 2;
@@ -75,7 +91,10 @@ int TritCpu::doInstr()
         }
         break;
     case ifControl:
-        throw runtime_error("Unimplemented");
+        if (*controlBuffer == tryte(0))
+        {
+            jumpIf();
+        }
         break;
     case endif:
         throw runtime_error("Unimplemented");
@@ -189,4 +208,25 @@ int TritCpu::doInstr()
     *instrPointer += tryte(3);
 
     return 0;
+}
+
+void TritCpu::jumpIf()
+{
+    tryte numIfs(1);
+
+    while (numIfs != tryte(0))
+    {
+        if (mem[*instrPointer] == castInstr(ifControl))
+        {
+            numIfs++;
+        }
+        else if (mem[*instrPointer] == castInstr(endif))
+        {
+            numIfs--;
+        }
+
+        *instrPointer += tryte(3);
+    }
+
+    return;
 }
