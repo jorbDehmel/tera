@@ -71,8 +71,25 @@ public:
     TritCpu(tryte *Sectors[27]);
 
     void loadProgram(vector<tryte> &Program);
-
     int doInstr();
+
+    void useStream(ostream &Stream)
+    {
+        outStream = &Stream;
+        return;
+    }
+
+    void useStream(istream &Stream)
+    {
+        inStream = &Stream;
+        return;
+    }
+
+protected:
+    void jumpIf();
+
+    ostream *outStream = &cout;
+    istream *inStream = &cin;
 
     tryte mem[MEMSIZE + INSTRSIZE];
     tryte *sectors[27];
@@ -81,9 +98,6 @@ public:
     tryte *instrPointer = mem;
     tryte *controlBuffer = mem + 1;
     tryte *sectorBuffer = mem + 2;
-
-protected:
-    void jumpIf();
 };
 
 #endif
