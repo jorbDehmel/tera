@@ -1,11 +1,12 @@
 .VAR 9
 put VAR _010
+
+_000000000
+
+
+// Comment
 out VAR 1
+
 ~VAR
-
-put CONT 1234
-
-andNeq 27 2
-out CONT 1
 
 kill 0 0

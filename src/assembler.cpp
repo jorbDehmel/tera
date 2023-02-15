@@ -95,8 +95,17 @@ trit_assembly Assembler::assemble(const string &What)
         else if (instr[0] == '_')
         {
             // Ternary literal
-            tryte toInsert = trytesFromBase27(instr.substr(1))[0];
-            out += encode(toInsert);
+            vector<tryte> toInsert = trytesFromBase27(instr.substr(1));
+
+            for (auto t : toInsert)
+            {
+                out += encode(t);
+            }
+        }
+        else if (instr[0] == '/')
+        {
+            string garbage;
+            getline(code, garbage);
         }
         else
         {
