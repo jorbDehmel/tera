@@ -70,10 +70,45 @@ trit_assembly Assembler::assemble(const string &What)
         {
             out += encode(variables[instr]);
         }
+        else if (instr[0] == '.')
+        {
+            // variable declaration
+            int size = 0;
+            code >> size;
+
+            variables[instr.substr(1)] = firstOpenAddress;
+            memStack.push(firstOpenAddress);
+            firstOpenAddress += size;
+        }
+        else if (instr[0] == '~')
+        {
+            // stack pop
+            if (variables.count(instr.substr(1)) == 0 || memStack.top() != variables[instr.substr(1)])
+            {
+                throw runtime_error("Cannot pop a variable which is not on the top of the stack");
+            }
+
+            variables.erase(instr.substr(1));
+            firstOpenAddress = memStack.top();
+            memStack.pop();
+        }
+        else if (instr[0] == '_')
+        {
+            // Ternary literal
+            tryte toInsert = trytesFromBase27(instr.substr(1))[0];
+            out += encode(toInsert);
+        }
         else
         {
-            // decimal literal
-            out += encode(tryte(stoi(instr)));
+            // Decimal literal
+            try
+            {
+                out += encode(tryte(stoi(instr)));
+            }
+            catch (invalid_argument e)
+            {
+                throw runtime_error("Invalid symbol");
+            }
         }
 
         if (instr == "kill")

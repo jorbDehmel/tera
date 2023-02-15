@@ -68,8 +68,20 @@ int main(const int argc, const char *argv[])
          << tags::reset;
 
     // Assemble
-    Assembler a;
-    trit_assembly assembled = a.assemble(toAssemble);
+    trit_assembly assembled;
+    try
+    {
+        Assembler a;
+        assembled = a.assemble(toAssemble);
+    }
+    catch (runtime_error e)
+    {
+        cout << tags::red_bold
+             << "Error: Assembly failed.\n"
+             << e.what() << '\n'
+             << tags::reset;
+        return 4;
+    }
 
     cout << tags::green_bold
          << "Assembled.\n"

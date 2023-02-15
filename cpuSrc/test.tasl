@@ -1,4 +1,7 @@
-put 27 27
+.VAR 9
+put VAR _010
+out VAR 1
+~VAR
 
 put CONT 1234
 

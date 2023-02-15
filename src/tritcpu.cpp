@@ -208,21 +208,21 @@ int TritCpu::doInstr()
         }
         break;
     case out:
-        for (tryte i = 0; i < *lit; i++)
+        for (int i = 0; i < *lit; i++)
         {
-            switch (curSector[*addr + i][8])
+            switch ((curSector[*addr + tryte(i)])[8])
             {
             case zero: // positive int
-                cout << (int)curSector[*addr] << '\n';
+                cout << (int)curSector[*addr + tryte(i)] << '\n';
                 break;
             case one: // negative int
-                cout << '-' << (int)curSector[*addr] << '\n';
+                cout << '-' << (int)curSector[*addr + tryte(i)] << '\n';
                 break;
             case two: // char
-                if ((int)curSector[*addr] < 255)
-                    cout << (char)((int)curSector[*addr]);
+                if ((int)curSector[*addr + tryte(i)] < 255)
+                    cout << (char)((int)curSector[*addr + tryte(i)]);
                 else
-                    cout << (int)curSector[*addr] << '\n';
+                    cout << (int)curSector[*addr + tryte(i)] << '\n';
                 break;
             }
         }

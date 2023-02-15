@@ -178,10 +178,17 @@ vector<tryte> trytesFromBase27(const string &Base27)
     string key = "0123456789abcdefghijklmnopq";
     vector<tryte> out;
 
-    for (int i = 0; i < Base27.size(); i += 3)
+    for (int i = 0; i < Base27.size();)
     {
         // Convert to decimal
-        short dec = key.find(Base27[i + 2]) + (key.find(Base27[i + 1]) * 27) + (key.find(Base27[i]) * 27 * 27);
+        short dec = key.find(Base27[i]) * 27 * 27;
+        i++;
+
+        dec += (key.find(Base27[i]) * 27);
+        i++;
+
+        dec += key.find(Base27[i]);
+        i++;
 
         // Append ternary equivolent of decimal
         out.push_back(tryte(dec));
