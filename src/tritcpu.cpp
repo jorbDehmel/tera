@@ -80,7 +80,7 @@ int TritCpu::doInstr()
         }
         else
         {
-            *instrPointer += *lit;
+            *instrPointer += (*lit - tryte(1)) * tryte(3);
         }
         break;
     case jumpBack:
@@ -90,7 +90,7 @@ int TritCpu::doInstr()
         }
         else
         {
-            *instrPointer -= *lit;
+            *instrPointer -= (*lit + tryte(1)) * tryte(3);
         }
         break;
     case ifControl:
@@ -100,7 +100,6 @@ int TritCpu::doInstr()
         }
         break;
     case endif:
-        throw runtime_error("Unmatched endif instruction");
         break;
     case andEq:
         if (*controlBuffer != tryte(0))
@@ -116,15 +115,17 @@ int TritCpu::doInstr()
         }
         break;
     case andNeq:
+        cout << "Entered andNeq\n";
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            cout << "andNeq replacing contents of control buffer\n";
+            if (curSector[*addr] != *lit)
             {
-                *controlBuffer = tryte(0);
+                *controlBuffer = tryte(19'682);
             }
             else
             {
-                *controlBuffer = tryte(19'682);
+                *controlBuffer = tryte(0);
             }
         }
         break;
@@ -170,13 +171,13 @@ int TritCpu::doInstr()
     case orNeq:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            if (curSector[*addr] != *lit)
             {
-                *controlBuffer = tryte(0);
+                *controlBuffer = tryte(19'682);
             }
             else
             {
-                *controlBuffer = tryte(19'682);
+                *controlBuffer = tryte(0);
             }
         }
         break;
@@ -218,7 +219,10 @@ int TritCpu::doInstr()
                 cout << '-' << (int)curSector[*addr] << '\n';
                 break;
             case two: // char
-                cout << (char)((int)curSector[*addr]);
+                if ((int)curSector[*addr] < 255)
+                    cout << (char)((int)curSector[*addr]);
+                else
+                    cout << (int)curSector[*addr] << '\n';
                 break;
             }
         }
@@ -235,6 +239,10 @@ int TritCpu::doInstr()
     case sector:
         if (*addr != tryte(0))
         {
+            if (sectors[*addr % tryte(27)] == nullptr)
+            {
+                throw runtime_error("Cannot access invalid memory sector");
+            }
             curSector = sectors[*addr % tryte(27)];
         }
         else
@@ -244,6 +252,7 @@ int TritCpu::doInstr()
         break;
 
     default:
+        cout << "Error during processing of instruction " << *instr << '\n';
         throw runtime_error("Could not process invalid command");
         break;
     }
@@ -259,6 +268,8 @@ void TritCpu::jumpIf()
 
     while (numIfs != tryte(0))
     {
+        *instrPointer += tryte(3);
+
         if (mem[*instrPointer] == castInstr(ifControl))
         {
             numIfs++;
@@ -267,8 +278,6 @@ void TritCpu::jumpIf()
         {
             numIfs--;
         }
-
-        *instrPointer += tryte(3);
     }
 
     return;

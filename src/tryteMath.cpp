@@ -67,8 +67,24 @@ tryte operator-(const tryte &A, const tryte &B)
 
 tryte operator*(const tryte &A, const tryte &B)
 {
-    throw runtime_error("unimplemented");
-    return tryte(0);
+    tryte out(0);
+
+    if (A < B)
+    {
+        for (tryte i(0); i < A; i++)
+        {
+            out += B;
+        }
+    }
+    else
+    {
+        for (tryte i(0); i < B; i++)
+        {
+            out += A;
+        }
+    }
+
+    return out;
 }
 
 tryte operator/(const tryte &A, const tryte &B)

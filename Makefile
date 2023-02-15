@@ -8,36 +8,37 @@ all: bin/tera.out bin/assembler.out bin/tricat.out
 
 ##################################
 
-bin/tera.out:	bin tritcpuMain.cpp build/trit.o build/tritcpu.o build/tryteMath.o
-	$(STEM) -o bin/tera.out tritcpuMain.cpp build/trit.o build/tryteMath.o build/tritcpu.o
+bin/tera.out:	build/tera.o build/trit.o build/tritcpu.o build/tryteMath.o
+	$(STEM) -o bin/tera.out build/tera.o build/trit.o build/tryteMath.o build/tritcpu.o
 
-bin/assembler.out:	bin assemblerMain.cpp build/assembler.o build/trit.o build/tryteMath.o
-	$(STEM) -o bin/assembler.out assemblerMain.cpp build/assembler.o build/trit.o build/tryteMath.o
+bin/assembler.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o
+	$(STEM) -o bin/assembler.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o
 
-bin/tricat.out:	bin tricat.cpp build/trit.o build/tryteMath.o
-	$(STEM) -o bin/tricat.out tricat.cpp build/trit.o build/tryteMath.o
+bin/tricat.out:	build/tricat.o build/trit.o build/tryteMath.o
+	$(STEM) -o bin/tricat.out build/tricat.o build/trit.o build/tryteMath.o
 
 ##################################
 
-build/trit.o:	build src/trit.cpp src/trit.hpp
+build/tera.o:	tritcpuMain.cpp
+	$(STEM) -c -o build/tera.o tritcpuMain.cpp
+
+build/assemblerMain.o:	assemblerMain.cpp
+	$(STEM) -c -o build/assemblerMain.o assemblerMain.cpp
+
+build/tricat.o: tricat.cpp
+	$(STEM) -c -o build/tricat.o tricat.cpp
+
+build/trit.o:	src/trit.cpp src/trit.hpp
 	$(STEM) -c -o build/trit.o src/trit.cpp
 
-build/tritcpu.o:	build src/tritcpu.cpp src/tritcpu.hpp
+build/tritcpu.o:	src/tritcpu.cpp src/tritcpu.hpp
 	$(STEM) -c -o build/tritcpu.o src/tritcpu.cpp
 
-build/assembler.o:	build src/assembler.cpp src/assembler.hpp
+build/assembler.o:	src/assembler.cpp src/assembler.hpp
 	$(STEM) -c -o build/assembler.o src/assembler.cpp
 
-build/tryteMath.o:	build src/tryteMath.cpp src/tryteMath.hpp
+build/tryteMath.o:	src/tryteMath.cpp src/tryteMath.hpp
 	$(STEM) -c -o build/tryteMath.o src/tryteMath.cpp
-
-##################################
-
-bin:
-	mkdir bin
-
-build:
-	mkdir build
 
 ##################################
 

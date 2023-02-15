@@ -40,6 +40,10 @@ Assembler::Assembler()
     instructions["inp"] = inp;
     instructions["sector"] = sector;
 
+    // Buffer address variables (non-stack)
+    instructions["INSTR"] = 0;
+    instructions["CONT"] = 1;
+
     return;
 }
 
