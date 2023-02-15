@@ -50,7 +50,7 @@ int main(const int argc, const char *argv[])
             {
                 cout << '\n';
             }
-            cout << i << " | ";
+            cout << i << "\t| ";
         }
 
         cout << out[i] << '\t';

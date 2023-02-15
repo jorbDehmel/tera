@@ -15,7 +15,6 @@ Instruction layout:
 Buffers:
 0 - instrPointer
 1 - controlBuffer
-2 - sectorBuffer
 
 27 - first free
 
@@ -49,7 +48,7 @@ enum instr
     ifControl,
     endif,
     andEq,
-    andNeq,
+    andNeq, // doesn't work
     andLess,
     andGreater,
     orEq,
@@ -68,7 +67,7 @@ class TritCpu
 {
 public:
     TritCpu();
-    TritCpu(tryte *Sectors[27]);
+    TritCpu(tryte *Sectors[26]);
 
     void loadProgram(vector<tryte> &Program);
 

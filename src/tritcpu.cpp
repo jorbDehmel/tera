@@ -80,7 +80,7 @@ int TritCpu::doInstr()
         }
         else
         {
-            *instrPointer += *lit;
+            *instrPointer += (*lit - tryte(1)) * tryte(3);
         }
         break;
     case jumpBack:
@@ -90,7 +90,7 @@ int TritCpu::doInstr()
         }
         else
         {
-            *instrPointer -= *lit;
+            *instrPointer -= (*lit + tryte(1)) * tryte(3);
         }
         break;
     case ifControl:
@@ -100,7 +100,6 @@ int TritCpu::doInstr()
         }
         break;
     case endif:
-        throw runtime_error("Unmatched endif instruction");
         break;
     case andEq:
         if (*controlBuffer != tryte(0))
@@ -244,6 +243,7 @@ int TritCpu::doInstr()
         break;
 
     default:
+        cout << "Error during processing of instruction " << *instr << '\n';
         throw runtime_error("Could not process invalid command");
         break;
     }
@@ -259,6 +259,8 @@ void TritCpu::jumpIf()
 
     while (numIfs != tryte(0))
     {
+        *instrPointer += tryte(3);
+
         if (mem[*instrPointer] == castInstr(ifControl))
         {
             numIfs++;
@@ -267,8 +269,6 @@ void TritCpu::jumpIf()
         {
             numIfs--;
         }
-
-        *instrPointer += tryte(3);
     }
 
     return;

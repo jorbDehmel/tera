@@ -1,5 +1,9 @@
-incr 32 22
-out 32 1
-incr 32 104
-out 32 1
-kill
+put 27 27
+
+put CONT 1234
+andNeq 27 28
+ifControl 0 0
+    out CONT 1
+endif 0 0
+
+kill 0 0
