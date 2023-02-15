@@ -115,15 +115,17 @@ int TritCpu::doInstr()
         }
         break;
     case andNeq:
+        cout << "Entered andNeq\n";
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            cout << "andNeq replacing contents of control buffer\n";
+            if (curSector[*addr] != *lit)
             {
-                *controlBuffer = tryte(0);
+                *controlBuffer = tryte(19'682);
             }
             else
             {
-                *controlBuffer = tryte(19'682);
+                *controlBuffer = tryte(0);
             }
         }
         break;
@@ -169,13 +171,13 @@ int TritCpu::doInstr()
     case orNeq:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            if (curSector[*addr] != *lit)
             {
-                *controlBuffer = tryte(0);
+                *controlBuffer = tryte(19'682);
             }
             else
             {
-                *controlBuffer = tryte(19'682);
+                *controlBuffer = tryte(0);
             }
         }
         break;
@@ -217,7 +219,10 @@ int TritCpu::doInstr()
                 cout << '-' << (int)curSector[*addr] << '\n';
                 break;
             case two: // char
-                cout << (char)((int)curSector[*addr]);
+                if ((int)curSector[*addr] < 255)
+                    cout << (char)((int)curSector[*addr]);
+                else
+                    cout << (int)curSector[*addr] << '\n';
                 break;
             }
         }
@@ -234,6 +239,10 @@ int TritCpu::doInstr()
     case sector:
         if (*addr != tryte(0))
         {
+            if (sectors[*addr % tryte(27)] == nullptr)
+            {
+                throw runtime_error("Cannot access invalid memory sector");
+            }
             curSector = sectors[*addr % tryte(27)];
         }
         else
