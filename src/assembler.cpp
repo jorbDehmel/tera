@@ -47,12 +47,33 @@ Assembler::Assembler()
     return;
 }
 
+/*
+Symbol meanings:
+
++ access superscope variable (+VARNAME)
+. variable declaration (.VAR 1)
+~ stack pop (~VAR)
+_ base 27 literal (_0qf)
+/ comment (/ hi)
+{ begin function ({FNNAME ...)
+} end function and return (... }FNNAME)
+! update call stack and call function (!FNNAME)
+
+If a symbol doesn't match any of these, order is:
+instruction
+variable (current scope)
+*/
+
+string beforeFnCall;
+string afterFnCall;
+
 trit_assembly Assembler::assemble(const string &What)
 {
     stringstream code;
     code << What;
 
     string instr, out;
+    string prefix;
 
     while (!code.eof())
     {
@@ -60,19 +81,36 @@ trit_assembly Assembler::assemble(const string &What)
 
         if (instructions.count(instr) != 0)
         {
+            // Instruction
             out += encode(instructions[instr]);
         }
-        else if (functions.count(instr) != 0)
+        else if (variables.count(prefix + instr) != 0)
         {
-            out += assemble(functions[instr]);
+            // Variable (current scope)
+            out += encode(variables[prefix + instr]);
         }
-        else if (variables.count(instr) != 0)
+        else if (instr[0] == '+')
         {
-            out += encode(variables[instr]);
+            // Variable (superscope)
+            string tempprefix = prefix;
+            for (int i = 0; i < instr.size() && instr[i] == '+'; i++)
+            {
+                tempprefix = tempprefix.substr(1);
+            }
+
+            if (variables.count(tempprefix + instr) != 0)
+            {
+                // Variable (current scope)
+                out += encode(variables[tempprefix + instr]);
+            }
+            else
+            {
+                throw runtime_error("No variable " + prefix + instr + " exists in superscope");
+            }
         }
         else if (instr[0] == '.')
         {
-            // variable declaration
+            // Variable declaration
             int size = 0;
             code >> size;
 
@@ -82,7 +120,7 @@ trit_assembly Assembler::assemble(const string &What)
         }
         else if (instr[0] == '~')
         {
-            // stack pop
+            // Stack pop
             if (variables.count(instr.substr(1)) == 0 || memStack.top() != variables[instr.substr(1)])
             {
                 throw runtime_error("Cannot pop a variable which is not on the top of the stack");
@@ -102,8 +140,17 @@ trit_assembly Assembler::assemble(const string &What)
                 out += encode(t);
             }
         }
+        else if (instr[0] == '{')
+        {
+            throw runtime_error("unimplemented");
+        }
+        else if (instr[0] == '!')
+        {
+            throw runtime_error("unimplemented");
+        }
         else if (instr[0] == '/')
         {
+            // Comment
             string garbage;
             getline(code, garbage);
         }
@@ -116,7 +163,7 @@ trit_assembly Assembler::assemble(const string &What)
             }
             catch (invalid_argument e)
             {
-                throw runtime_error("Invalid symbol");
+                throw runtime_error("Invalid symbol '" + instr + "'");
             }
         }
 

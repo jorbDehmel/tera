@@ -15,6 +15,7 @@ Instruction layout:
 Buffers:
 0 - instrPointer
 1 - controlBuffer
+2 - returnPointer
 
 27 - first free
 
@@ -23,6 +24,34 @@ Maximum working memory (27 sectors): 531'441 trytes = 27 kilotryte ~= 40 mb
 
 .tasl file: Ternary ASsembly Language file
 .tera file: TERnAry file (following BINary's .bin, and adding an a to be cool)
+*/
+
+/*
+On properly compiling/assembling functions
+
+Naive approach (that I've been doing):
+    Store function as source code, and replace any call
+    to it with the compiled version of this source code.
+
+Better approach:
+    Compile function once outside of all others, and
+    store the instruction address of its start. Before
+    calling a function, do the following.
+
+    .PREV_POINTER 1         // Create PREV_POINTER
+    cpy RET PREV_POINTER    // Copy old returnPointer to PREV_POINTER
+    cpy INSTR RET           // Copy current address to returnPointer
+    incr RET 9              // Account for these commands upon return
+    put INSTR FN_ADDR       // Call fn
+
+    <in fn>
+        // fn code here     // Do something useful
+        cpy RET INSTR       // Return control to caller
+    <end fn>
+
+    cpy PREV_POINTER RET    // Restore previous returnPointer
+    ~PREV_POINTER           // Delete temperary variable
+
 */
 
 #ifndef TRITCPU_HPP
