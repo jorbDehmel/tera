@@ -32,7 +32,7 @@ public:
 
 protected:
     map<string, tryte> instructions;
-    map<string, trit_assembly> functions;
+    map<string, tryte> functions;
     map<string, tryte> variables;
     stack<tryte> memStack;
     stack<tryte> ifPositions;

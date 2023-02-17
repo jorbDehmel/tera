@@ -60,33 +60,33 @@ Better approach:
 #include "tryteMath.hpp"
 #include <vector>
 
-#define MEMSIZE 19'683
+#define MEMSIZE (int)19'683
 #define INSTRSIZE 19'683
 
 // Note: trytes internally store their data as 16-bit binary integers.
 // Thus, the following enumeration is valid for direct casting to trytes.
 enum instr
 {
-    kill = 0,
-    put,
-    cpy,
-    incr,
-    decr,
-    jump,
-    jumpBack,
-    ifControl,
-    endif,
-    andEq,
-    andNeq, // doesn't work
-    andLess,
-    andGreater,
-    orEq,
-    orNeq,
-    orLess,
-    orGreater,
-    out,
-    inp,
-    sector,
+    kill = 0,   // 000 000'000'000
+    put,        // 001 000'000'001
+    cpy,        // 002 000'000'002
+    incr,       // 003 000'000'010
+    decr,       // 004 000'000'011
+    jump,       // 005 000'000'012
+    jumpBack,   // 006 000'000'020
+    ifControl,  // 007 000'000'021
+    endif,      // 008 000'000'022
+    andEq,      // 009 000'000'100
+    andNeq,     // 00a 000'000'101 doesn't work
+    andLess,    // 00b 000'000'102
+    andGreater, // 00c 000'000'110
+    orEq,       // 00d 000'000'111
+    orNeq,      // 00e 000'000'112
+    orLess,     // 00f 000'000'120
+    orGreater,  // 00g 000'000'121
+    out,        // 00h 000'000'122
+    inp,        // 00i 000'000'200
+    sector,     // 00j 000'000'201
 };
 
 // Makes intr into short and casts to tryte
@@ -100,6 +100,8 @@ public:
 
     void loadProgram(vector<tryte> &Program);
     int doInstr();
+
+    void printInstr(const tryte &From, const int &HowMany) const;
 
     void useStream(ostream &Stream)
     {

@@ -1,7 +1,12 @@
-.VAR 9
+jump 0 3
+{main
+    .VAR 1
+    put VAR 27
+    out VAR 1
+    ~VAR
+    kill
+}main
 
-put VAR _010
-out VAR 1
+jump main 0
 
-~VAR
-kill 0 0
+kill

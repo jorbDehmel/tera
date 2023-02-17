@@ -16,7 +16,7 @@ tryte castInstr(instr what)
 
 TritCpu::TritCpu()
 {
-    *instrPointer = MEMSIZE;
+    *instrPointer = 2 * MEMSIZE / 3;
 
     sectors[0] = mem;
     for (int i = 1; i < 27; i++)
@@ -28,7 +28,7 @@ TritCpu::TritCpu()
 
 TritCpu::TritCpu(tryte *Sectors[26])
 {
-    *instrPointer = MEMSIZE;
+    *instrPointer = 2 * MEMSIZE / 3;
 
     sectors[0] = mem;
     for (int i = 1; i < 27; i++)
@@ -47,16 +47,41 @@ void TritCpu::loadProgram(vector<tryte> &Program)
     return;
 }
 
+void TritCpu::printInstr(const tryte &From, const int &HowMany) const
+{
+    for (int i = 0; i < HowMany; i++)
+    {
+        if (i % 3 == 0 && i != 0)
+        {
+            cout << '\n';
+        }
+        cout << mem[From + tryte(i)] << '\t';
+    }
+    cout << '\n';
+
+    return;
+}
+
 int TritCpu::doInstr()
 {
-    tryte *instr, *addr, *lit;
+    if (*instrPointer % tryte(3) != tryte(0))
+    {
+        throw runtime_error("Illegal instruction postition");
+    }
 
-    instr = mem + *instrPointer;
+    tryte *instruc, *addr, *lit;
+
+    instruc = mem + *instrPointer;
     addr = mem + *instrPointer + 1;
     lit = mem + *instrPointer + 2;
 
+    cout << "Pos:   " << *instrPointer << '\n'
+         << "Instr: " << *instruc << '\n'
+         << "Addr:  " << *addr << '\n'
+         << "Lit:   " << *lit << "\n\n";
+
     int temp;
-    switch (*instr)
+    switch (*instruc)
     {
     case kill:
         return -1;
@@ -74,23 +99,23 @@ int TritCpu::doInstr()
         curSector[*addr] -= *lit;
         break;
     case jump:
-        if (*addr != tryte(0))
-        {
-            *instrPointer = *addr;
-        }
-        else
+        if (*lit != tryte(0))
         {
             *instrPointer += (*lit - tryte(1)) * tryte(3);
         }
+        else
+        {
+            *instrPointer = *addr - tryte(3);
+        }
         break;
     case jumpBack:
-        if (*addr != tryte(0))
+        if (*lit != tryte(0))
         {
-            *instrPointer = *addr;
+            *instrPointer -= (*lit + tryte(1)) * tryte(3);
         }
         else
         {
-            *instrPointer -= (*lit + tryte(1)) * tryte(3);
+            *instrPointer = *addr - tryte(3);
         }
         break;
     case ifControl:
@@ -252,7 +277,7 @@ int TritCpu::doInstr()
         break;
 
     default:
-        cout << "Error during processing of instruction " << *instr << '\n';
+        cout << "Error during processing of instruction " << *instruc << '\n';
         throw runtime_error("Could not process invalid command");
         break;
     }

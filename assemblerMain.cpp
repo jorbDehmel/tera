@@ -82,6 +82,13 @@ int main(const int argc, const char *argv[])
              << tags::reset;
         return 4;
     }
+    catch (...)
+    {
+        cout << tags::red_bold
+             << "Error: Fatal error occured.\n"
+             << tags::reset;
+        return 5;
+    }
 
     cout << tags::green_bold
          << "Assembled.\n"

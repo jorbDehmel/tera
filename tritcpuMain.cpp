@@ -60,6 +60,8 @@ int main(const int argc, const char *argv[])
     TritCpu c;
     c.loadProgram(parsed);
 
+    c.printInstr(2 * MEMSIZE / 3, parsed.size());
+
     // Run
     while (c.doInstr() == 0)
     {

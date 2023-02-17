@@ -41,8 +41,9 @@ Assembler::Assembler()
     instructions["sector"] = sector;
 
     // Buffer address variables (non-stack)
-    instructions["INSTR"] = 0;
-    instructions["CONT"] = 1;
+    variables["INSTR"] = 0;
+    variables["CONT"] = 1;
+    variables["RET"] = 2;
 
     return;
 }
@@ -64,9 +65,6 @@ instruction
 variable (current scope)
 */
 
-string beforeFnCall;
-string afterFnCall;
-
 trit_assembly Assembler::assemble(const string &What)
 {
     stringstream code;
@@ -84,6 +82,12 @@ trit_assembly Assembler::assemble(const string &What)
             // Instruction
             out += encode(instructions[instr]);
         }
+        else if (functions.count(instr) != 0)
+        {
+            // Function
+            cout << "Function " << instr << " maps to address " << functions[instr] << '\n';
+            out += encode(functions[instr]);
+        }
         else if (variables.count(prefix + instr) != 0)
         {
             // Variable (current scope)
@@ -95,6 +99,11 @@ trit_assembly Assembler::assemble(const string &What)
             string tempprefix = prefix;
             for (int i = 0; i < instr.size() && instr[i] == '+'; i++)
             {
+                if (tempprefix == "")
+                {
+                    throw runtime_error("Base scope has no superscope");
+                }
+
                 tempprefix = tempprefix.substr(1);
             }
 
@@ -114,19 +123,19 @@ trit_assembly Assembler::assemble(const string &What)
             int size = 0;
             code >> size;
 
-            variables[instr.substr(1)] = firstOpenAddress;
+            variables[prefix + instr.substr(1)] = firstOpenAddress;
             memStack.push(firstOpenAddress);
             firstOpenAddress += size;
         }
         else if (instr[0] == '~')
         {
             // Stack pop
-            if (variables.count(instr.substr(1)) == 0 || memStack.top() != variables[instr.substr(1)])
+            if (variables.count(prefix + instr.substr(1)) == 0 || memStack.top() != variables[prefix + instr.substr(1)])
             {
                 throw runtime_error("Cannot pop a variable which is not on the top of the stack");
             }
 
-            variables.erase(instr.substr(1));
+            variables.erase(prefix + instr.substr(1));
             firstOpenAddress = memStack.top();
             memStack.pop();
         }
@@ -142,10 +151,27 @@ trit_assembly Assembler::assemble(const string &What)
         }
         else if (instr[0] == '{')
         {
-            throw runtime_error("unimplemented");
+            string name = instr.substr(1);
+            functions[name] = out.size() / 3;
+            prefix = "+" + prefix;
+        }
+        else if (instr[0] == '}')
+        {
+            if (prefix == "")
+            {
+                throw runtime_error("Error: Cannot end global scope");
+            }
+
+            prefix = prefix.substr(1);
         }
         else if (instr[0] == '!')
         {
+            string name = instr.substr(1);
+            if (functions.count(name) == 0)
+            {
+                throw runtime_error("Error: Undeclared function " + name);
+            }
+
             throw runtime_error("unimplemented");
         }
         else if (instr[0] == '/')
@@ -165,11 +191,6 @@ trit_assembly Assembler::assemble(const string &What)
             {
                 throw runtime_error("Invalid symbol '" + instr + "'");
             }
-        }
-
-        if (instr == "kill")
-        {
-            break;
         }
     }
 
