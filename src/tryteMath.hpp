@@ -28,4 +28,7 @@ tryte operator++(tryte &a, int); // post
 tryte operator--(tryte &a);      // pre
 tryte operator--(tryte &a, int); // post
 
+tryte operator*=(tryte &A, const tryte &B);
+tryte operator/=(tryte &A, const tryte &B);
+
 #endif

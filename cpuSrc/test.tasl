@@ -1,5 +1,3 @@
-jump 0 4
-
 {main
     .VAR 1
     put VAR 27

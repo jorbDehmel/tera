@@ -166,8 +166,44 @@ trit_assembly Assembler::assemble(const string &What)
         else if (instr[0] == '{')
         {
             string name = instr.substr(1);
-            functions[name] = INSTRSTART + out.size() / 3;
+            functions[name] = (INSTRSTART + out.size() / 3) + 3;
             prefix = "+" + prefix;
+
+            auto position = code.tellg();
+            const string preprocCharacters = "*+.~_/";
+            tryte jumpBy(3);
+
+            // find corrosponding end brace
+            int numBraces = 1;
+            string cur;
+            do
+            {
+                code >> cur;
+
+                if (cur[0] == '{')
+                {
+                    numBraces++;
+                }
+                else if (cur[0] == '}')
+                {
+                    numBraces--;
+                }
+                else if (cur == "!return")
+                {
+                    jumpBy += 3;
+                }
+                else if (preprocCharacters.find(cur[0]) == string::npos)
+                {
+                    // not a preproc statement; 3 of these make an instruction
+                    jumpBy++;
+                }
+            } while (numBraces != 0);
+            jumpBy /= tryte(3);
+
+            // add jump to corrosponding end brace
+            out += encode(jump) + encode(tryte(0)) + encode(jumpBy);
+
+            code.seekg(position);
         }
         else if (instr[0] == '}')
         {

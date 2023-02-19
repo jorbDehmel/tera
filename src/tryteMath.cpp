@@ -174,3 +174,15 @@ tryte operator-=(tryte &a, tryte &by)
     a = (a - by);
     return a;
 }
+
+tryte operator*=(tryte &A, const tryte &B)
+{
+    A = (A * B);
+    return A;
+}
+
+tryte operator/=(tryte &A, const tryte &B)
+{
+    A = (A / B);
+    return A;
+}
