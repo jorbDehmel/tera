@@ -60,12 +60,15 @@ int main(const int argc, const char *argv[])
     TritCpu c;
     c.loadProgram(parsed);
 
+#ifdef DEBUG
     c.printInstr(2 * MEMSIZE / 3, parsed.size());
+#endif
 
     // Run
+    long long int numTicks = 0;
     while (c.doInstr() == 0)
     {
-        // This comment to make this loop less nasty
+        numTicks++;
     }
 
     return 0;

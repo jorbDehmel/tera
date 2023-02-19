@@ -8,6 +8,8 @@ MIT licence via mit-license.org held by author
 
 #include "tritcpu.hpp"
 
+#undef DEBUG
+
 tryte castInstr(instr what)
 {
     tryte out = tryte((short)what);
@@ -75,10 +77,13 @@ int TritCpu::doInstr()
     addr = mem + *instrPointer + 1;
     lit = mem + *instrPointer + 2;
 
+#ifdef DEBUG
     cout << "Pos:   " << *instrPointer << '\n'
          << "Instr: " << *instruc << '\n'
          << "Addr:  " << *addr << '\n'
-         << "Lit:   " << *lit << "\n\n";
+         << "Lit:   " << *lit << "\n"
+         << "Ret:   " << mem[2] << "\n\n";
+#endif
 
     int temp;
     switch (*instruc)

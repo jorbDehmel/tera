@@ -1,12 +1,16 @@
-jump 0 3
+jump 0 4
+
 {main
     .VAR 1
     put VAR 27
     out VAR 1
     ~VAR
-    kill
+    !return
 }main
 
-jump main 0
+!main
+
+put 104 104
+out 104 1
 
 kill

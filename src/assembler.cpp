@@ -8,6 +8,8 @@ MIT licence via mit-license.org held by author
 
 #include "assembler.hpp"
 
+#define INSTRSTART (MEMSIZE * 2 / 3)
+
 Assembler::Assembler()
 {
     firstOpenAddress = tryte(27);
@@ -51,6 +53,7 @@ Assembler::Assembler()
 /*
 Symbol meanings:
 
+* access base scope variable (*VARNAME)
 + access superscope variable (+VARNAME)
 . variable declaration (.VAR 1)
 ~ stack pop (~VAR)
@@ -96,25 +99,36 @@ trit_assembly Assembler::assemble(const string &What)
         else if (instr[0] == '+')
         {
             // Variable (superscope)
-            string tempprefix = prefix;
+            string tempname = prefix + instr;
             for (int i = 0; i < instr.size() && instr[i] == '+'; i++)
             {
-                if (tempprefix == "")
+                if (tempname[0] != '+')
                 {
                     throw runtime_error("Base scope has no superscope");
                 }
 
-                tempprefix = tempprefix.substr(1);
+                tempname = tempname.substr(2);
             }
 
-            if (variables.count(tempprefix + instr) != 0)
+            if (variables.count(tempname) != 0)
             {
-                // Variable (current scope)
-                out += encode(variables[tempprefix + instr]);
+                out += encode(variables[tempname]);
             }
             else
             {
-                throw runtime_error("No variable " + prefix + instr + " exists in superscope");
+                throw runtime_error("No variable " + tempname + " exists in superscope");
+            }
+        }
+        else if (instr[0] == '*')
+        {
+            // Variable (base scope)
+            if (variables.count(instr.substr(1)) != 0)
+            {
+                out += encode(variables[instr.substr(1)]);
+            }
+            else
+            {
+                throw runtime_error("No variable " + instr.substr(1) + " exists in base scope");
             }
         }
         else if (instr[0] == '.')
@@ -152,7 +166,7 @@ trit_assembly Assembler::assemble(const string &What)
         else if (instr[0] == '{')
         {
             string name = instr.substr(1);
-            functions[name] = out.size() / 3;
+            functions[name] = INSTRSTART + out.size() / 3;
             prefix = "+" + prefix;
         }
         else if (instr[0] == '}')
@@ -167,12 +181,55 @@ trit_assembly Assembler::assemble(const string &What)
         else if (instr[0] == '!')
         {
             string name = instr.substr(1);
-            if (functions.count(name) == 0)
+            if (name == "return")
+            {
+                vector<tryte> toInsert = {
+                    cpy, tryte(2), tryte(0)};
+                for (auto t : toInsert)
+                {
+                    out += encode(t);
+                }
+            }
+            else if (functions.count(name) == 0)
             {
                 throw runtime_error("Error: Undeclared function " + name);
             }
+            else
+            {
+                // .OLD_RET 1 /unnamed compile-time var
+                tryte oldRet = firstOpenAddress;
+                memStack.push(firstOpenAddress);
+                firstOpenAddress += 1; // since size is 1 tryte
 
-            throw runtime_error("unimplemented");
+                // cpy RET OLD_RET
+                // cpy INSTR RET
+                // incr RET 6
+                vector<tryte> toInsert = {
+                    cpy, tryte(2), oldRet,
+                    cpy, tryte(0), tryte(2),
+                    incr, tryte(2), tryte(6)};
+                for (auto t : toInsert)
+                {
+                    out += encode(t);
+                }
+
+                // Jump to fn command
+                out += encode(tryte(jump));
+                out += encode(functions[name]);
+                out += encode(tryte(0));
+
+                // cpy OLD_RET RET
+                toInsert = {
+                    cpy, oldRet, tryte(2)};
+                for (auto t : toInsert)
+                {
+                    out += encode(t);
+                }
+
+                // ~OLD_RET
+                firstOpenAddress = memStack.top();
+                memStack.pop();
+            }
         }
         else if (instr[0] == '/')
         {
@@ -189,7 +246,7 @@ trit_assembly Assembler::assemble(const string &What)
             }
             catch (invalid_argument e)
             {
-                throw runtime_error("Invalid symbol '" + instr + "'");
+                throw runtime_error("Invalid symbol '" + prefix + instr + "'");
             }
         }
     }
