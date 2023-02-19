@@ -1,3 +1,11 @@
+/*
+Jordan Dehmel
+jdehmel@outlook.com
+github.com/jorbDehmel
+2022 - present
+MIT licence via mit-license.org held by author
+*/
+
 #ifndef COLORTAGS_H
 #define COLORTAGS_H
 

@@ -7,6 +7,7 @@ MIT licence via mit-license.org held by author
 */
 
 #include "assembler.hpp"
+#include "tags.hpp"
 
 #include <cassert>
 #include <iostream>
@@ -35,16 +36,34 @@ public:
 
 int main(const int argc, const char *argv[])
 {
-    assert(argc == 2);
+    if (argc != 2)
+    {
+        cout << tags::red_bold
+             << "Error: Must provide an input file.\n"
+             << tags::reset;
+        return 1;
+    }
 
     string inputFile = argv[1];
+    if (inputFile.size() < 5 || inputFile.substr(inputFile.size() - 5) != ".tera")
+    {
+        cout << tags::yellow_bold
+             << "Warning! The proper file suffix for ternary compiled files is .tera\n"
+             << tags::reset;
+    }
 
     InstructionStealer temp;
     auto instructions = temp.invertedInstructions;
     auto variables = temp.invertedVariables;
 
     ifstream in(inputFile);
-    assert(in.is_open());
+    if (!in.is_open())
+    {
+        cout << tags::red_bold
+             << "Error: Could not open input file.\n"
+             << tags::reset;
+        return 2;
+    }
 
     trit_assembly tryteCode, line;
     while (!in.eof())
@@ -63,7 +82,13 @@ int main(const int argc, const char *argv[])
     {
         if (instrIndex % 3 == 0)
         {
-            assert(instructions.count(curTryte) != 0);
+            if (instructions.count(curTryte) == 0)
+            {
+                cout << tags::red_bold
+                     << "Error: Non-instruction in instruction position.\n"
+                     << tags::reset;
+                return 3;
+            }
             stringOut << instructions[curTryte];
         }
         else
@@ -85,7 +110,13 @@ int main(const int argc, const char *argv[])
         string outputFile = argv[2];
 
         ofstream out(outputFile);
-        assert(out.is_open());
+        if (!out.is_open())
+        {
+            cout << tags::red_bold
+                 << "Error: Could not open output file.\n"
+                 << tags::reset;
+            return 4;
+        }
 
         out << stringOut.str();
         out.close();

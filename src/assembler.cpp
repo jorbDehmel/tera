@@ -184,7 +184,7 @@ trit_assembly Assembler::assemble(const string &What)
             if (name == "return")
             {
                 vector<tryte> toInsert = {
-                    cpy, tryte(2), tryte(0)};
+                    cpy, RET, INSTR};
                 for (auto t : toInsert)
                 {
                     out += encode(t);
@@ -205,9 +205,9 @@ trit_assembly Assembler::assemble(const string &What)
                 // cpy INSTR RET
                 // incr RET 6
                 vector<tryte> toInsert = {
-                    cpy, tryte(2), oldRet,
-                    cpy, tryte(0), tryte(2),
-                    incr, tryte(2), tryte(6)};
+                    cpy, RET, oldRet,
+                    cpy, INSTR, RET,
+                    incr, RET, tryte(6)};
                 for (auto t : toInsert)
                 {
                     out += encode(t);

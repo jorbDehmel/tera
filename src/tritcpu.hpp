@@ -89,6 +89,13 @@ enum instr
     sector,     // 00j 000'000'201
 };
 
+enum buffers
+{
+    INSTR = 0,
+    CONT = 1,
+    RET = 2
+};
+
 // Makes intr into short and casts to tryte
 tryte castInstr(instr what);
 
