@@ -65,11 +65,18 @@ int main(const int argc, const char *argv[])
 #endif
 
     // Run
+#ifdef DEBUG
     long long int numTicks = 0;
+#endif
     while (c.doInstr() == 0)
     {
+#ifdef DEBUG
         numTicks++;
+#endif
     }
+#ifdef DEBUG
+    cout << "Clock ticks: " << numTicks << '\n';
+#endif
 
     return 0;
 }
