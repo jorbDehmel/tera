@@ -45,14 +45,14 @@ Assembler::Assembler()
     instructions["sector"] = sector;
 
     // Buffer address variables (non-stack)
-    variables["INSTR"] = 0;
-    variables["CONT"] = 1;
-    variables["RET"] = 2;
+    variables["INSTR"] = var(0, 1);
+    variables["CONT"] = var(1, 1);
+    variables["RET"] = var(2, 1);
 
     // Convenience variables
-    variables["ENDL"] = '\n' + CHAR_OFFSET;
-    variables["SPACE"] = ' ' + CHAR_OFFSET;
-    variables["TAB"] = '\t' + CHAR_OFFSET;
+    variables["ENDL"] = var('\n' + CHAR_OFFSET, 1);
+    variables["SPACE"] = var(' ' + CHAR_OFFSET, 1);
+    variables["TAB"] = var('\t' + CHAR_OFFSET, 1);
 
     // No argument instructions
     noArgs.insert("kill");
@@ -60,8 +60,9 @@ Assembler::Assembler()
     noArgs.insert("endif");
 
     // Include standard macros
-    macros["print"] = stdMacros::print;
-    macros["println"] = stdMacros::println;
+    macros["print"] = print;
+    macros["println"] = println;
+    macros["req"] = req;
 
     return;
 }
@@ -116,8 +117,10 @@ trit_assembly Assembler::assemble(const string &What)
     preMacro << What;
     string postMacro;
 
+#ifdef DEBUG
     cout << "Before macros:\n"
          << What << '\n';
+#endif
 
     // Macro replacement pass
     string instr;
@@ -137,7 +140,7 @@ trit_assembly Assembler::assemble(const string &What)
             if (macros.count(name) != 0)
             {
                 string arg = instr.substr(name.size() + 2);
-                postMacro += macros[name](arg) + '\t';
+                postMacro += macros[name](*this, arg) + '\t';
             }
             else
             {
@@ -150,8 +153,10 @@ trit_assembly Assembler::assemble(const string &What)
         }
     }
 
+#ifdef DEBUG
     cout << "After macros:\n"
          << postMacro << '\n';
+#endif
 
     // Compilation pass
     stringstream code;
@@ -186,7 +191,7 @@ trit_assembly Assembler::assemble(const string &What)
         else if (variables.count(handleScope(prefix, instr)) != 0)
         {
             // Variable (current scope)
-            out += encode(variables[handleScope(prefix, instr)]);
+            out += encode(variables[handleScope(prefix, instr)].first);
         }
         else if (instr[0] == '^')
         {
@@ -218,12 +223,12 @@ trit_assembly Assembler::assemble(const string &What)
             {
                 if (by >= 0)
                 {
-                    out += encode(variables[name] + tryte(by));
+                    out += encode(variables[name].first + tryte(by));
                 }
                 else
                 {
                     // Trytes do not natively support negatives
-                    out += encode(variables[name] - tryte(-by));
+                    out += encode(variables[name].first - tryte(-by));
                 }
             }
         }
@@ -233,14 +238,14 @@ trit_assembly Assembler::assemble(const string &What)
             int size = 0;
             code >> size;
 
-            variables[prefix + instr.substr(1)] = firstOpenAddress;
+            variables[prefix + instr.substr(1)] = var(firstOpenAddress, size);
             memStack.push(firstOpenAddress);
             firstOpenAddress += size;
         }
         else if (instr[0] == '~')
         {
             // Stack pop
-            if (variables.count(prefix + instr.substr(1)) == 0 || memStack.top() != variables[prefix + instr.substr(1)])
+            if (variables.count(prefix + instr.substr(1)) == 0 || memStack.top() != variables[prefix + instr.substr(1)].first)
             {
                 throw runtime_error("Cannot pop a variable which is not on the top of the stack");
             }

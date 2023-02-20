@@ -25,7 +25,7 @@ public:
         }
         for (auto i : variables)
         {
-            invertedVariables[i.second] = i.first;
+            invertedVariables[i.second.first] = i.first;
         }
         return;
     }

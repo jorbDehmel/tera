@@ -8,7 +8,7 @@ MIT licence via mit-license.org held by author
 
 #include "stdMacros.hpp"
 
-string stdMacros::print(const string &Arg)
+string print(Assembler &Caller, const string &Arg)
 {
     string out;
 
@@ -46,7 +46,7 @@ string stdMacros::print(const string &Arg)
     return out;
 }
 
-string stdMacros::println(const string &Arg)
+string println(Assembler &Caller, const string &Arg)
 {
     string out;
 
@@ -81,6 +81,34 @@ string stdMacros::println(const string &Arg)
 
     // Destruct the variable
     out += "~__PRINT_TEMP\n";
+
+    return out;
+}
+
+string req(Assembler &Caller, const string &Arg)
+{
+    string out;
+
+    vector<string> vars;
+    string temp;
+    for (int i = 0; i < Arg.size(); i++)
+    {
+        if (Arg[i] == ' ')
+        {
+            vars.push_back(temp);
+            temp = "";
+        }
+        else
+        {
+            temp += Arg[i];
+        }
+    }
+    vars.push_back(temp);
+
+    for (auto v : vars)
+    {
+        out += "incr " + v + " 0\n";
+    }
 
     return out;
 }

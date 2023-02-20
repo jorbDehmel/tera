@@ -23,6 +23,7 @@ MIT licence via mit-license.org held by author
 using namespace std;
 
 typedef string trit_assembly;
+typedef pair<tryte, tryte> var;
 
 class Assembler
 {
@@ -32,14 +33,13 @@ public:
     trit_assembly assemble(const string &What);
     trit_assembly encode(const tryte &What);
 
-    map<string, string (*)(const string &Arg)> macros;
+    map<string, string (*)(Assembler &Caller, const string &Arg)> macros;
 
-protected:
     set<string> noArgs;
 
     map<string, tryte> instructions;
     map<string, tryte> functions;
-    map<string, tryte> variables;
+    map<string, var> variables;
 
     stack<tryte> memStack;
     stack<tryte> ifPositions;

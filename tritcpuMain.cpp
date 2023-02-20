@@ -16,6 +16,8 @@ MIT licence via mit-license.org held by author
 #include "src/tags.hpp"
 using namespace std;
 
+#define TIMER
+
 int main(const int argc, const char *argv[])
 {
     if (argc != 2)
@@ -62,20 +64,34 @@ int main(const int argc, const char *argv[])
 
 #ifdef DEBUG
     c.printInstr(2 * MEMSIZE / 3, parsed.size());
-#endif
-
-    // Run
-#ifdef DEBUG
     long long int numTicks = 0;
-#endif
+
+    auto begin = chrono::high_resolution_clock::now();
     while (c.doInstr() == 0)
     {
-#ifdef DEBUG
         numTicks++;
-#endif
     }
-#ifdef DEBUG
+    auto end = chrono::high_resolution_clock::now();
+    long int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+
     cout << "Clock ticks: " << numTicks << '\n';
+    cout << "Nanoseconds: " << ellapsed << '\n';
+#else
+#ifdef TIMER
+    auto begin = chrono::high_resolution_clock::now();
+    while (c.doInstr() == 0)
+    {
+        // This comment to make this loop less ugly
+    }
+    auto end = chrono::high_resolution_clock::now();
+    long int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
+    cout << "Nanoseconds: " << ellapsed << '\n';
+#else
+    while (c.doInstr() == 0)
+    {
+        // This comment to make this loop less ugly
+    }
+#endif
 #endif
 
     return 0;

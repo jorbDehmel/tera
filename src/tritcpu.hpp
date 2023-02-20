@@ -24,34 +24,17 @@ Maximum working memory (27 sectors): 531'441 trytes = 27 kilotryte ~= 40 mb
 
 .tasl file: Ternary ASsembly Language file
 .tera file: TERnAry file (following BINary's .bin, and adding an a to be cool)
-*/
 
-/*
-On properly compiling/assembling functions
+cpp hello world:
+    6'460.65 ns
 
-Naive approach (that I've been doing):
-    Store function as source code, and replace any call
-    to it with the compiled version of this source code.
+tera hello world:
+    36'536'288 ns
 
-Better approach:
-    Compile function once outside of all others, and
-    store the instruction address of its start. Before
-    calling a function, do the following.
+16-bit hello world:
+    174'124 ns
 
-    .PREV_POINTER 1         // Create PREV_POINTER
-    cpy RET PREV_POINTER    // Copy old returnPointer to PREV_POINTER
-    cpy INSTR RET           // Copy current address to returnPointer
-    incr RET 9              // Account for these commands upon return
-    put INSTR FN_ADDR       // Call fn
-
-    <in fn>
-        // fn code here     // Do something useful
-        cpy RET INSTR       // Return control to caller
-    <end fn>
-
-    cpy PREV_POINTER RET    // Restore previous returnPointer
-    ~PREV_POINTER           // Delete temperary variable
-
+(about 5655.2 times slower)
 */
 
 #ifndef TRITCPU_HPP
