@@ -1,18 +1,2 @@
-put 27 -H
-put 28 -e
-put 29 -l
-put 30 -l
-put 31 -o
-put 32 -,
-put 33 SPACE
-put 34 -w
-put 35 -o
-put 36 -r
-put 37 -l
-put 38 -d
-put 39 -!
-put 40 ENDL
-
-out 27 14
-
+#println Hello, World!
 kill
