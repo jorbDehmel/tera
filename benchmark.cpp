@@ -12,7 +12,7 @@ using namespace std;
 
 int main(const int argc, const char *argv[])
 {
-    int num = 1'000'000;
+    int num = 100'000;
     double average = 0;
 
     for (int i = 0; i < num; i++)
@@ -26,6 +26,8 @@ int main(const int argc, const char *argv[])
         average += ellapsed;
     }
     average /= num;
+
+    system("clear");
 
     cout << "Average over " << num << " attempts: " << average << " nanoseconds\n";
 
