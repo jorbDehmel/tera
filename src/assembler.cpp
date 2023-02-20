@@ -10,6 +10,8 @@ MIT licence via mit-license.org held by author
 
 #define INSTRSTART (MEMSIZE * 2 / 3)
 
+#define CHAR_OFFSET 13'122
+
 Assembler::Assembler()
 {
     firstOpenAddress = tryte(27);
@@ -47,6 +49,16 @@ Assembler::Assembler()
     variables["CONT"] = 1;
     variables["RET"] = 2;
 
+    // Convenience variables
+    variables["ENDL"] = '\n' + CHAR_OFFSET;
+    variables["SPACE"] = ' ' + CHAR_OFFSET;
+    variables["TAB"] = '\t' + CHAR_OFFSET;
+
+    // No argument instructions
+    noArgs.insert("kill");
+    noArgs.insert("ifControl");
+    noArgs.insert("endif");
+
     return;
 }
 
@@ -58,14 +70,11 @@ Symbol meanings:
 . variable declaration (.VAR 1)
 ~ stack pop (~VAR)
 _ base 27 literal (_0qf)
+- char literal
 / comment (/ hi)
 { begin function ({FNNAME ...)
 } end function and return (... }FNNAME)
 ! update call stack and call function (!FNNAME)
-
-If a symbol doesn't match any of these, order is:
-instruction
-variable (current scope)
 */
 
 trit_assembly Assembler::assemble(const string &What)
@@ -84,6 +93,12 @@ trit_assembly Assembler::assemble(const string &What)
         {
             // Instruction
             out += encode(instructions[instr]);
+
+            // Take care of no argument instructions
+            if (noArgs.count(instr) != 0)
+            {
+                out += encode(tryte(0)) + encode(tryte(0));
+            }
         }
         else if (functions.count(instr) != 0)
         {
@@ -162,6 +177,11 @@ trit_assembly Assembler::assemble(const string &What)
             {
                 out += encode(t);
             }
+        }
+        else if (instr[0] == '-')
+        {
+            tryte toInsert((int)instr[1] + CHAR_OFFSET);
+            out += encode(toInsert);
         }
         else if (instr[0] == '{')
         {

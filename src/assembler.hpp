@@ -16,6 +16,7 @@ MIT licence via mit-license.org held by author
 #include <map>
 #include <stack>
 #include <sstream>
+#include <set>
 
 #include "tritcpu.hpp"
 using namespace std;
@@ -31,9 +32,12 @@ public:
     trit_assembly encode(const tryte &What);
 
 protected:
+    set<string> noArgs;
+
     map<string, tryte> instructions;
     map<string, tryte> functions;
     map<string, tryte> variables;
+
     stack<tryte> memStack;
     stack<tryte> ifPositions;
 

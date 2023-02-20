@@ -239,19 +239,22 @@ int TritCpu::doInstr()
     case out:
         for (int i = 0; i < *lit; i++)
         {
+            tryte toPrint(curSector[*addr + tryte(i)]);
+            toPrint.set(8, zero);
+
             switch ((curSector[*addr + tryte(i)])[8])
             {
             case zero: // positive int
-                cout << (int)curSector[*addr + tryte(i)] << '\n';
+                cout << (int)toPrint << '\n';
                 break;
             case one: // negative int
-                cout << '-' << (int)curSector[*addr + tryte(i)] << '\n';
+                cout << '-' << (int)toPrint << '\n';
                 break;
             case two: // char
-                if ((int)curSector[*addr + tryte(i)] < 255)
-                    cout << (char)((int)curSector[*addr + tryte(i)]);
+                if ((int)toPrint < 255)
+                    cout << (char)toPrint;
                 else
-                    cout << (int)curSector[*addr + tryte(i)] << '\n';
+                    cout << (int)toPrint << '\n';
                 break;
             }
         }

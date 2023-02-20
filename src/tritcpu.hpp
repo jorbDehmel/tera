@@ -67,17 +67,17 @@ Better approach:
 // Thus, the following enumeration is valid for direct casting to trytes.
 enum instr
 {
-    kill = 0,   // 000 000'000'000
+    kill = 0,   // 000 000'000'000 NOARG
     put,        // 001 000'000'001
     cpy,        // 002 000'000'002
     incr,       // 003 000'000'010
     decr,       // 004 000'000'011
     jump,       // 005 000'000'012
     jumpBack,   // 006 000'000'020
-    ifControl,  // 007 000'000'021
-    endif,      // 008 000'000'022
+    ifControl,  // 007 000'000'021 NOARG
+    endif,      // 008 000'000'022 NOARG
     andEq,      // 009 000'000'100
-    andNeq,     // 00a 000'000'101 doesn't work
+    andNeq,     // 00a 000'000'101
     andLess,    // 00b 000'000'102
     andGreater, // 00c 000'000'110
     orEq,       // 00d 000'000'111
