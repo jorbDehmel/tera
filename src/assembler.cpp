@@ -59,6 +59,10 @@ Assembler::Assembler()
     noArgs.insert("ifControl");
     noArgs.insert("endif");
 
+    // Include standard macros
+    macros["print"] = stdMacros::print;
+    macros["println"] = stdMacros::println;
+
     return;
 }
 
@@ -75,14 +79,87 @@ _ base 27 literal (_0qf)
 { begin function ({FNNAME ...)
 } end function and return (... }FNNAME)
 ! update call stack and call function (!FNNAME)
+^ pointer arithmatic ^VARNAME.-12
 */
+const string preprocCharacters = "*+.~_/";
+
+string handleScope(const string &Prefix, const string &VarName)
+{
+    if (VarName[0] == '+')
+    {
+        string tempname = Prefix + VarName;
+        for (int i = 0; i < VarName.size() && VarName[i] == '+'; i++)
+        {
+            if (tempname[0] != '+')
+            {
+                throw runtime_error("Base scope has no superscope");
+            }
+
+            tempname = tempname.substr(2);
+        }
+
+        return tempname;
+    }
+    else if (VarName[0] == '*')
+    {
+        return VarName.substr(1);
+    }
+    else
+    {
+        return Prefix + VarName;
+    }
+}
 
 trit_assembly Assembler::assemble(const string &What)
 {
-    stringstream code;
-    code << What;
+    stringstream preMacro;
+    preMacro << What;
+    string postMacro;
 
-    string instr, out;
+    cout << "Before macros:\n"
+         << What << '\n';
+
+    // Macro replacement pass
+    string instr;
+    cout << "Handling macros...\n";
+    while (!preMacro.eof())
+    {
+        getline(preMacro, instr);
+
+        if (instr[0] == '#')
+        {
+            string name;
+            for (int i = 1; i < instr.size() && instr[i] != ' '; i++)
+            {
+                name += instr[i];
+            }
+
+            if (macros.count(name) != 0)
+            {
+                string arg = instr.substr(name.size() + 2);
+                postMacro += macros[name](arg) + '\t';
+            }
+            else
+            {
+                throw runtime_error("Unknown macro '" + instr.substr(1) + "'");
+            }
+        }
+        else
+        {
+            postMacro += instr + '\n';
+        }
+    }
+
+    cout << "After macros:\n"
+         << postMacro << '\n';
+
+    // Compilation pass
+    stringstream code;
+    code << postMacro;
+
+    cout << "Assembling...\n";
+
+    string out;
     string prefix;
 
     while (!code.eof())
@@ -106,44 +183,48 @@ trit_assembly Assembler::assemble(const string &What)
             cout << "Function " << instr << " maps to address " << functions[instr] << '\n';
             out += encode(functions[instr]);
         }
-        else if (variables.count(prefix + instr) != 0)
+        else if (variables.count(handleScope(prefix, instr)) != 0)
         {
             // Variable (current scope)
-            out += encode(variables[prefix + instr]);
+            out += encode(variables[handleScope(prefix, instr)]);
         }
-        else if (instr[0] == '+')
+        else if (instr[0] == '^')
         {
-            // Variable (superscope)
-            string tempname = prefix + instr;
-            for (int i = 0; i < instr.size() && instr[i] == '+'; i++)
+            string arg = handleScope(prefix, instr.substr(1));
+
+            string name;
+            int by;
+
+            int ind = 0;
+            while (arg[ind] != '.')
             {
-                if (tempname[0] != '+')
+                name += arg[ind];
+                ind++;
+
+                if (ind >= arg.size())
                 {
-                    throw runtime_error("Base scope has no superscope");
+                    throw runtime_error("Invalid usage of pointer arithmatic operator");
                 }
-
-                tempname = tempname.substr(2);
             }
 
-            if (variables.count(tempname) != 0)
+            by = stoi(arg.substr(ind + 1));
+
+            // Pointer arithmatic
+            if (variables.count(name) == 0)
             {
-                out += encode(variables[tempname]);
+                throw runtime_error("Unknown variable '" + name + "'");
             }
             else
             {
-                throw runtime_error("No variable " + tempname + " exists in superscope");
-            }
-        }
-        else if (instr[0] == '*')
-        {
-            // Variable (base scope)
-            if (variables.count(instr.substr(1)) != 0)
-            {
-                out += encode(variables[instr.substr(1)]);
-            }
-            else
-            {
-                throw runtime_error("No variable " + instr.substr(1) + " exists in base scope");
+                if (by >= 0)
+                {
+                    out += encode(variables[name] + tryte(by));
+                }
+                else
+                {
+                    // Trytes do not natively support negatives
+                    out += encode(variables[name] - tryte(-by));
+                }
             }
         }
         else if (instr[0] == '.')
@@ -190,7 +271,6 @@ trit_assembly Assembler::assemble(const string &What)
             prefix = "+" + prefix;
 
             auto position = code.tellg();
-            const string preprocCharacters = "*+.~_/";
             tryte jumpBy(3);
 
             // find corrosponding end brace

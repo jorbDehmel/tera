@@ -19,6 +19,7 @@ MIT licence via mit-license.org held by author
 #include <set>
 
 #include "tritcpu.hpp"
+#include "stdMacros.hpp"
 using namespace std;
 
 typedef string trit_assembly;
@@ -30,6 +31,8 @@ public:
 
     trit_assembly assemble(const string &What);
     trit_assembly encode(const tryte &What);
+
+    map<string, string (*)(const string &Arg)> macros;
 
 protected:
     set<string> noArgs;

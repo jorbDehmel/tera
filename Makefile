@@ -11,14 +11,14 @@ all: bin/tera.out bin/assembler.out bin/tricat.out bin/deco.out
 bin/tera.out:	build/tera.o build/trit.o build/tritcpu.o build/tryteMath.o
 	$(STEM) -o bin/tera.out build/tera.o build/trit.o build/tryteMath.o build/tritcpu.o
 
-bin/assembler.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o
-	$(STEM) -o bin/assembler.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o
+bin/assembler.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+	$(STEM) -o bin/assembler.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
 
 bin/tricat.out:	build/tricat.o build/trit.o build/tryteMath.o
 	$(STEM) -o bin/tricat.out build/tricat.o build/trit.o build/tryteMath.o
 
-bin/deco.out:	build/deco.o build/assembler.o build/trit.o build/tryteMath.o
-	$(STEM) -o bin/deco.out build/deco.o build/assembler.o build/trit.o build/tryteMath.o
+bin/deco.out:	build/deco.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+	$(STEM) -o bin/deco.out build/deco.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
 
 ##################################
 
@@ -45,6 +45,9 @@ build/tryteMath.o:	src/tryteMath.cpp src/tryteMath.hpp
 
 build/deco.o:	src/decompiler.cpp src/assembler.hpp
 	$(STEM) -c -o build/deco.o src/decompiler.cpp
+
+build/stdmac.o:	src/stdMacros.cpp src/stdMacros.hpp
+	$(STEM) -c -o build/stdmac.o src/stdMacros.cpp
 
 ##################################
 
