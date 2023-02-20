@@ -69,7 +69,7 @@ int main(const int argc, const char *argv[])
     while (!in.eof())
     {
         getline(in, line);
-        tryteCode += line;
+        tryteCode += line + '\n';
     }
     in.close();
 
@@ -84,12 +84,15 @@ int main(const int argc, const char *argv[])
         {
             if (instructions.count(curTryte) == 0)
             {
-                cout << tags::red_bold
+                cout << tags::yellow_bold
                      << "Error: Non-instruction in instruction position.\n"
                      << tags::reset;
-                return 3;
+                stringOut << (int)curTryte;
             }
-            stringOut << instructions[curTryte];
+            else
+            {
+                stringOut << instructions[curTryte];
+            }
         }
         else
         {

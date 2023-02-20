@@ -1,14 +1,13 @@
 {main
-    .VAR 1
-    put VAR 27
-    out VAR 1
+    .VAR 9
+
+    inp VAR 9
+    out VAR 9
+    
     ~VAR
     !return
 }main
 
 !main
 
-put 104 104
-out 104 1
-
-kill
+kill 0 0

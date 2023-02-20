@@ -9,6 +9,7 @@ MIT licence via mit-license.org held by author
 #include "tritcpu.hpp"
 
 #undef DEBUG
+// #define DEBUG
 
 tryte castInstr(instr what)
 {
@@ -145,10 +146,8 @@ int TritCpu::doInstr()
         }
         break;
     case andNeq:
-        cout << "Entered andNeq\n";
         if (*controlBuffer != tryte(0))
         {
-            cout << "andNeq replacing contents of control buffer\n";
             if (curSector[*addr] != *lit)
             {
                 *controlBuffer = tryte(19'682);
