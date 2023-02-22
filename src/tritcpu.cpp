@@ -282,6 +282,21 @@ int TritCpu::doInstr()
             curSector = mem;
         }
         break;
+    case addV:
+        curSector[*addr] = curSector[*addr] + curSector[*lit];
+        break;
+    case subtractV:
+        curSector[*addr] = curSector[*addr] - curSector[*lit];
+        break;
+    case multV:
+        curSector[*addr] = curSector[*addr] * curSector[*lit];
+        break;
+    case divV:
+        curSector[*addr] = curSector[*addr] / curSector[*lit];
+        break;
+    case modV:
+        curSector[*addr] = curSector[*addr] % curSector[*lit];
+        break;
 
     default:
         cout << "Error during processing of instruction " << *instruc << '\n';

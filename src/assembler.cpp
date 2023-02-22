@@ -43,6 +43,13 @@ Assembler::Assembler()
 
     instructions["inp"] = inp;
     instructions["sector"] = sector;
+    instructions["addV"] = addV;
+
+    instructions["subtractV"] = subtractV;
+    instructions["multV"] = multV;
+    instructions["divV"] = divV;
+
+    instructions["modV"] = modV;
 
     // Buffer address variables (non-stack)
     variables["INSTR"] = var(0, 1);
@@ -64,6 +71,10 @@ Assembler::Assembler()
     macros["println"] = println;
     macros["req"] = req;
 
+    macros["sizeof"] = sizeOf;
+    macros["cpy"] = copyVars;
+    macros["zero"] = zeroOut;
+
     return;
 }
 
@@ -81,6 +92,7 @@ _ base 27 literal (_0qf)
 } end function and return (... }FNNAME)
 ! update call stack and call function (!FNNAME)
 ^ pointer arithmatic ^VARNAME.-12
+$ sizeof
 */
 const string preprocCharacters = "*+.~_/";
 
@@ -113,45 +125,72 @@ string handleScope(const string &Prefix, const string &VarName)
 
 trit_assembly Assembler::assemble(const string &What)
 {
-    stringstream preMacro;
-    preMacro << What;
-    string postMacro;
-
 #ifdef DEBUG
     cout << "Before macros:\n"
          << What << '\n';
 #endif
 
-    // Macro replacement pass
-    string instr;
-    cout << "Handling macros...\n";
-    while (!preMacro.eof())
+    cout << "Premacro pass...\n";
+    stringstream temp;
+    temp << What;
+
+    string line;
+    while (getline(temp, line))
     {
-        getline(preMacro, instr);
-
-        if (instr[0] == '#')
+        if (line[0] == '.')
         {
-            string name;
-            for (int i = 1; i < instr.size() && instr[i] != ' '; i++)
-            {
-                name += instr[i];
-            }
+            stringstream extract;
+            extract << line.substr(1);
 
-            if (macros.count(name) != 0)
+            int size;
+            string name;
+            extract >> name >> size;
+
+            variables[name] = var(tryte(0), tryte(size));
+        }
+    }
+
+    string postMacro = What;
+    string instr;
+
+    int macroPass = 0;
+    do
+    {
+        // Load variables for generalized passes
+        stringstream preMacro;
+        preMacro << postMacro;
+        postMacro = "";
+
+        // Macro replacement pass
+        cout << "Handling macros (pass " << macroPass++ << ")\n";
+        while (!preMacro.eof())
+        {
+            getline(preMacro, instr);
+
+            if (instr[0] == '#')
             {
-                string arg = instr.substr(name.size() + 2);
-                postMacro += macros[name](*this, arg) + '\t';
+                string name;
+                for (int i = 1; i < instr.size() && instr[i] != ' '; i++)
+                {
+                    name += instr[i];
+                }
+
+                if (macros.count(name) != 0)
+                {
+                    string arg = instr.substr(name.size() + 2);
+                    postMacro += macros[name](*this, arg) + '\t';
+                }
+                else
+                {
+                    throw runtime_error("Unknown macro '" + instr.substr(1) + "'");
+                }
             }
             else
             {
-                throw runtime_error("Unknown macro '" + instr.substr(1) + "'");
+                postMacro += instr + '\n';
             }
         }
-        else
-        {
-            postMacro += instr + '\n';
-        }
-    }
+    } while (postMacro.find('#') != string::npos);
 
 #ifdef DEBUG
     cout << "After macros:\n"
@@ -232,13 +271,24 @@ trit_assembly Assembler::assemble(const string &What)
                 }
             }
         }
+        else if (instr[0] == '$')
+        {
+            string name = handleScope(prefix, instr.substr(1));
+            if (variables.count(name) == 0)
+            {
+                throw runtime_error("No variable '" + name + "' found.");
+            }
+
+            out += encode(variables[name].second);
+        }
         else if (instr[0] == '.')
         {
             // Variable declaration
             int size = 0;
             code >> size;
 
-            variables[prefix + instr.substr(1)] = var(firstOpenAddress, size);
+            variables[prefix + instr.substr(1)] = var(firstOpenAddress, tryte(size));
+
             memStack.push(firstOpenAddress);
             firstOpenAddress += size;
         }

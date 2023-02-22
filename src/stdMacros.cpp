@@ -112,3 +112,55 @@ string req(Assembler &Caller, const string &Arg)
 
     return out;
 }
+
+string sizeOf(Assembler &Caller, const string &Arg)
+{
+    string out;
+
+    out += Caller.variables[Arg].second;
+
+    return out;
+}
+
+string copyVars(Assembler &Caller, const string &Arg)
+{
+    // Parse args
+    string ARG_1, ARG_2;
+    int ind = 0;
+
+    while (Arg[ind] != ' ')
+    {
+        ARG_1 += Arg[ind];
+        ind++;
+    }
+    ARG_2 = Arg.substr(ind + 1);
+
+    // Assure safety
+    if (Caller.variables[ARG_1].second != Caller.variables[ARG_2].second)
+    {
+        throw macro_error("Cannot copy: Unequal variable sizes");
+    }
+
+    string out;
+
+    int size = (int)Caller.variables[ARG_1].second;
+    for (int i = 0; i < size; i++)
+    {
+        out += "cpy ^" + ARG_1 + "." + to_string(i) + " ^" + ARG_2 + "." + to_string(i) + "\n";
+    }
+
+    return out;
+}
+
+string zeroOut(Assembler &Caller, const string &Arg)
+{
+    string out;
+
+    int size = (int)Caller.variables[Arg].second;
+    for (int i = 0; i < size; i++)
+    {
+        out += "put ^" + Arg + "." + to_string(i) + " 0\n";
+    }
+
+    return out;
+}

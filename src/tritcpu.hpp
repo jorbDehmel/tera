@@ -70,6 +70,11 @@ enum instr
     out,        // 00h 000'000'122
     inp,        // 00i 000'000'200
     sector,     // 00j 000'000'201
+    addV,       // 00k 000'000'202
+    subtractV,  // 00l 000'000'210
+    multV,      // 00m 000'000'211
+    divV,       // 00n 000'000'212
+    modV,       // 00o 000'000'220
 };
 
 enum buffers

@@ -1,0 +1,24 @@
+.VAR 9
+
+#println First variable: 
+put ^VAR.0 1234
+out VAR 9
+
+.CLONE 9
+#zero CLONE
+
+#println Second variable pre-copy: 
+out CLONE 9
+
+#println After copy: 
+#cpy VAR CLONE
+out CLONE 9
+
+#println Add test...
+addV CLONE VAR
+out CLONE 9
+
+~CLONE
+~VAR
+
+kill
