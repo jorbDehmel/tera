@@ -6,6 +6,9 @@ github.com/jorbDehmel
 MIT licence via mit-license.org held by author
 */
 
+// A "Hello World" benchmarker to test the speed of
+// .tera interprettation against compiled C++
+
 #include <chrono>
 #include <iostream>
 using namespace std;
@@ -21,7 +24,6 @@ int main(const int argc, const char *argv[])
         cout << "Hello, World!\n";
         auto end = chrono::high_resolution_clock::now();
         int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
-        // cout << "Nanoseconds (cpp): " << ellapsed << '\n';
 
         average += ellapsed;
     }

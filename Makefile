@@ -1,6 +1,9 @@
 ##################################
 
-STEM = clang++ -pedantic -Wall -Werror
+RELEASE_STEM = g++
+PROD_STEM = clang++ -pedantic -Wall -Werror
+
+STEM = $(RELEASE_STEM)
 
 ##################################
 
@@ -10,9 +13,10 @@ install: all
 	sudo cp bin/tera.out /usr/bin/tera
 	sudo cp bin/terace.out /usr/bin/terace
 	sudo cp bin/deco.out /usr/bin/deco
+	sudo cp bin/tricat.out /usr/bin/tricat
 
 uninstall:
-	sudo rm -f /usr/bin/tera /usr/bin/terace /usr/bin/deco
+	sudo rm -f /usr/bin/tera /usr/bin/terace /usr/bin/deco /usr/bin/tricat
 
 ##################################
 
@@ -69,6 +73,9 @@ build/stdmac.o:	src/stdMacros.cpp src/stdMacros.hpp
 	$(STEM) -c -o build/stdmac.o src/stdMacros.cpp
 
 ##################################
+
+clean:
+	rm build/*
 
 pclean:
 	rm bin/* build/*

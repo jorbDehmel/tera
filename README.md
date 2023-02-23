@@ -10,17 +10,18 @@ github.com/jorbDehmel/tera.git
 
 I'm bored and I have nothing better to do.
 
-## Overview: Tera, Terace, and Deco
+## Overview: Tera, Terace, Tricat and Deco
 
 Tera is a base-3 CPU simulator. It runs .tera files which are
 compiled by Terace, the Tera assembler. Terace takes in .tasl
 (ternary assembly language) files. Deco is the Tera decompiler,
 which takes .tera files and outputs a possible .tasl
-source.
+source. Tricat echos the raw trytes of a ternary file.
 
 Tera - TERnAry cpu
 Terace - TERA ASSembler (Abbreviation works verbally)
 Deco - DECOmpiler
+Tricat - Ternary Cat (As in the UNIX command cat)
 
 ## Use
 
@@ -50,6 +51,10 @@ To decompile some .tera file:
 (this prints the .tasl)
 
 `bin/deco.out /PATH/TO/TERA/FILE.tera /PATH/TO/OUTPUT/FILE.tasl` (this writes the .tasl to a new file)
+
+To see the raw trytes of some file:
+
+`bin/tricat.out /PATH/TO/FILE.tera`
 
 ## .tasl symbol meanings
 
@@ -301,61 +306,35 @@ Just as one hexadecimal character is equivolent to 4 bits (1 *nibble*),
 1 triternary character is equivolent to 1 **tribble** (3 of which make
 up a tryte). Below is a triternary conversion table.
 
-Decimal = Triternary = Tribble
-
-0 = 0 = 000
-
-1 = 1 = 001
-
-2 = 2 = 002
-
-3 = 3 = 010
-
-4 = 4 = 011
-
-5 = 5 = 012
-
-6 = 6 = 020
-
-7 = 7 = 021
-
-8 = 8 = 022
-
-9 = 9 = 100
-
-10 = a = 101
-
-11 = b = 102
-
-12 = c = 110
-
-13 = d = 111
-
-14 = e = 112
-
-15 = f = 120
-
-16 = g = 121
-
-17 = h = 122
-
-18 = i = 200
-
-19 = j = 201
-
-20 = k = 202
-
-21 = l = 210
-
-22 = m = 211
-
-23 = n = 212
-
-24 = o = 220
-
-25 = p = 221
-
-26 = q = 222
+| Decimal | Triternary | Tribble |
+| ------- | ---------- | ------- |
+| 0       | 0          | 000     |
+| 1       | 1          | 001     |
+| 2       | 2          | 002     |
+| 3       | 3          | 010     |
+| 4       | 4          | 011     |
+| 5       | 5          | 012     |
+| 6       | 6          | 020     |
+| 7       | 7          | 021     |
+| 8       | 8          | 022     |
+| 9       | 9          | 100     |
+| 10      | a          | 101     |
+| 11      | b          | 102     |
+| 12      | c          | 110     |
+| 13      | d          | 111     |
+| 14      | e          | 112     |
+| 15      | f          | 120     |
+| 16      | g          | 121     |
+| 17      | h          | 122     |
+| 18      | i          | 200     |
+| 19      | j          | 201     |
+| 20      | k          | 202     |
+| 21      | l          | 210     |
+| 22      | m          | 211     |
+| 23      | n          | 212     |
+| 24      | o          | 220     |
+| 25      | p          | 221     |
+| 26      | q          | 222     |
 
 ## Tryte file encoding
 
@@ -379,3 +358,9 @@ integer (just a minus followed by its value, leading to -0). This is
 followed by a newline.
 
 If the tryte has a 2 in the largest trit, it is outputted as a C++ char.
+
+## Memory sectors
+
+These are not extensively tested, but they allow for memory size upgrades
+from 1 kilotryte to 27. A wrapper program could also link them to files
+or drives and the CPU could use them accordingly with little modification.
