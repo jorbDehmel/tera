@@ -6,37 +6,6 @@ github.com/jorbDehmel
 MIT licence via mit-license.org held by author
 */
 
-/*
-Instruction layout:
-1 tryte instr
-1 tryte addr
-1 tryte literal
-
-Buffers:
-0 - instrPointer
-1 - controlBuffer
-2 - returnPointer
-
-27 - first free
-
-Minimum working memory (1 sector): 19'683 trytes = 1 kilotryte ~= 1400 kb
-Maximum working memory (27 sectors): 531'441 trytes = 27 kilotryte ~= 40 mb
-
-.tasl file: Ternary ASsembly Language file
-.tera file: TERnAry file (following BINary's .bin, and adding an a to be cool)
-
-cpp hello world:
-    6'460.65 ns
-
-tera hello world:
-    142'887 ns
-
-16-bit hello world:
-    174'124 ns
-
-(about 5655.2 times slower)
-*/
-
 #ifndef TRITCPU_HPP
 #define TRITCPU_HPP
 

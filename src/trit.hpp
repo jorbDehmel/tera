@@ -6,14 +6,6 @@ github.com/jorbDehmel
 MIT licence via mit-license.org held by author
 */
 
-/*
-Useful information for my definition of a tryte:
-1 tryte = 9 trits (19'683 states)
-1 kilotryte = 3^9 trytes
-1 megatryte = 3^13 trytes
-1 gigatryte = 3^19 trytes
-*/
-
 #ifndef TRIT_HPP
 #define TRIT_HPP
 

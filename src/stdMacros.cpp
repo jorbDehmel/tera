@@ -113,15 +113,6 @@ string req(Assembler &Caller, const string &Arg)
     return out;
 }
 
-string sizeOf(Assembler &Caller, const string &Arg)
-{
-    string out;
-
-    out += Caller.variables[Arg].second;
-
-    return out;
-}
-
 string copyVars(Assembler &Caller, const string &Arg)
 {
     // Parse args

@@ -28,7 +28,6 @@ string println(Assembler &Caller, const string &Arg);
 
 string req(Assembler &Caller, const string &Arg);
 
-string sizeOf(Assembler &Caller, const string &Arg);
 string copyVars(Assembler &Caller, const string &Arg);
 string zeroOut(Assembler &Caller, const string &Arg);
 

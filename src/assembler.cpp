@@ -72,29 +72,11 @@ Assembler::Assembler()
     macros["println"] = println;
     macros["req"] = req;
 
-    macros["sizeof"] = sizeOf;
     macros["cpy"] = copyVars;
     macros["zero"] = zeroOut;
 
     return;
 }
-
-/*
-Symbol meanings:
-
-* access base scope variable (*VARNAME)
-+ access superscope variable (+VARNAME)
-. variable declaration (.VAR 1)
-~ stack pop (~VAR)
-_ base 27 literal (_0qf)
-- char literal
-/ comment (/ hi)
-{ begin function ({FNNAME ...)
-} end function and return (... }FNNAME)
-! update call stack and call function (!FNNAME)
-^ pointer arithmatic ^VARNAME.-12
-$ sizeof
-*/
 
 string handleScope(const string &Prefix, const string &VarName)
 {

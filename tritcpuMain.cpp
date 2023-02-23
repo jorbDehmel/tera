@@ -60,21 +60,6 @@ int main(const int argc, const char *argv[])
     TritCpu c;
     c.loadProgram(parsed);
 
-#ifdef DEBUG
-    c.printInstr(2 * MEMSIZE / 3, parsed.size());
-    long long int numTicks = 0;
-
-    auto begin = chrono::high_resolution_clock::now();
-    while (c.doInstr() == 0)
-    {
-        numTicks++;
-    }
-    auto end = chrono::high_resolution_clock::now();
-    long int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
-
-    cout << "Clock ticks: " << numTicks << '\n';
-    cout << "Nanoseconds: " << ellapsed << '\n';
-#else
 #ifdef TIMER
     auto begin = chrono::high_resolution_clock::now();
     while (c.doInstr() == 0)
@@ -85,9 +70,10 @@ int main(const int argc, const char *argv[])
     long int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
     cout << "Nanoseconds: " << ellapsed << '\n';
 
+    cout << "Itemized:\n";
     for (auto item : instrTimes)
     {
-        cout << "Instr: " << item.first << " av ns: " << item.second.first / item.second.second << '\n';
+        cout << "\tInstr: " << item.first << " av ns: " << item.second.first / item.second.second << '\n';
     }
 #else
     while (c.doInstr() == 0)
@@ -95,7 +81,5 @@ int main(const int argc, const char *argv[])
         // This comment to make this loop less ugly
     }
 #endif
-#endif
-
     return 0;
 }

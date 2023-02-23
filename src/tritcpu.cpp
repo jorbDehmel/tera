@@ -78,14 +78,6 @@ int TritCpu::doInstr()
     addr = mem + *instrPointer + 1;
     lit = mem + *instrPointer + 2;
 
-#ifdef DEBUG
-    cout << "Pos:   " << *instrPointer << '\n'
-         << "Instr: " << *instruc << '\n'
-         << "Addr:  " << *addr << '\n'
-         << "Lit:   " << *lit << "\n"
-         << "Ret:   " << mem[2] << "\n\n";
-#endif
-
     int temp;
     switch (*instruc)
     {

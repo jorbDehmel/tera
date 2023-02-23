@@ -4,15 +4,31 @@ STEM = clang++ -pedantic -Wall -Werror
 
 ##################################
 
-all: bin/tera.out bin/teras.out bin/tricat.out bin/deco.out bin/benchmark.out
+all: dirs bin/tera.out bin/terace.out bin/tricat.out bin/deco.out bin/benchmark.out
+
+install: all
+	sudo cp bin/tera.out /usr/bin/tera
+	sudo cp bin/terace.out /usr/bin/terace
+	sudo cp bin/deco.out /usr/bin/deco
+
+uninstall:
+	sudo rm -f /usr/bin/tera /usr/bin/terace /usr/bin/deco
 
 ##################################
+
+dirs:	bin/ build/
+
+bin/:
+	mkdir bin
+
+build/:
+	mkdir build
 
 bin/tera.out:	build/tera.o build/trit.o build/tritcpu.o build/tryteMath.o
 	$(STEM) -o bin/tera.out build/tera.o build/trit.o build/tryteMath.o build/tritcpu.o
 
-bin/teras.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
-	$(STEM) -o bin/teras.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+bin/terace.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+	$(STEM) -o bin/terace.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
 
 bin/tricat.out:	build/tricat.o build/trit.o build/tryteMath.o
 	$(STEM) -o bin/tricat.out build/tricat.o build/trit.o build/tryteMath.o
