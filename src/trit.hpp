@@ -74,8 +74,7 @@ public:
     tryte &operator+=(const tryte &by);
     tryte &operator-=(const tryte &by);
 
-protected:
-    short data = 0;
+    unsigned short data = 0;
 };
 
 // Parses from encoded stringx

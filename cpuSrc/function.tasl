@@ -1,24 +1,27 @@
-.VAR 9
+{main
+    #println First variable:
 
-#println First variable: 
-put ^VAR.0 1234
-out VAR 9
+    .VAR 9
+    #zero VAR
+    put ^VAR.0 1234
+    out VAR 9
 
-.CLONE 9
-#zero CLONE
+    #println Second variable pre-copy:
 
-#println Second variable pre-copy: 
-out CLONE 9
+    .CLONE 9
+    #zero CLONE
+    out CLONE 9
 
-#println After copy: 
-#cpy VAR CLONE
-out CLONE 9
+    #println After copy: 
 
-#println Add test...
-addV CLONE VAR
-out CLONE 9
+    #cpy VAR CLONE
+    out CLONE 9
 
-~CLONE
-~VAR
+    ~CLONE
+    ~VAR
 
+    !return
+}
+
+!main
 kill

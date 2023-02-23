@@ -8,8 +8,9 @@ MIT licence via mit-license.org held by author
 
 #include "tritcpu.hpp"
 
-#undef DEBUG
-// #define DEBUG
+#ifdef TIMER
+map<tryte, pair<double, int>> instrTimes;
+#endif
 
 tryte castInstr(instr what)
 {
@@ -67,10 +68,9 @@ void TritCpu::printInstr(const tryte &From, const int &HowMany) const
 
 int TritCpu::doInstr()
 {
-    if (*instrPointer % tryte(3) != tryte(0))
-    {
-        throw runtime_error("Illegal instruction postition");
-    }
+#ifdef TIMER
+    auto start = chrono::high_resolution_clock::now();
+#endif
 
     tryte *instruc, *addr, *lit;
 
@@ -297,6 +297,9 @@ int TritCpu::doInstr()
     case modV:
         curSector[*addr] = curSector[*addr] % curSector[*lit];
         break;
+    case ifNever:
+        jumpIf();
+        break;
 
     default:
         cout << "Error during processing of instruction " << *instruc << '\n';
@@ -305,6 +308,21 @@ int TritCpu::doInstr()
     }
 
     *instrPointer += tryte(3);
+
+#ifdef TIMER
+    auto end = chrono::high_resolution_clock::now();
+    int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - start).count();
+
+    if (instrTimes.count(*instruc) == 0)
+    {
+        instrTimes[*instruc] = pair<double, int>(ellapsed, 1);
+    }
+    else
+    {
+        instrTimes[*instruc].first += ellapsed;
+        instrTimes[*instruc].second += 1;
+    }
+#endif
 
     return 0;
 }

@@ -4,15 +4,15 @@ STEM = clang++ -pedantic -Wall -Werror
 
 ##################################
 
-all: bin/tera.out bin/assembler.out bin/tricat.out bin/deco.out bin/benchmark.out
+all: bin/tera.out bin/teras.out bin/tricat.out bin/deco.out bin/benchmark.out
 
 ##################################
 
 bin/tera.out:	build/tera.o build/trit.o build/tritcpu.o build/tryteMath.o
 	$(STEM) -o bin/tera.out build/tera.o build/trit.o build/tryteMath.o build/tritcpu.o
 
-bin/assembler.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
-	$(STEM) -o bin/assembler.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+bin/teras.out:	build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
+	$(STEM) -o bin/teras.out build/assemblerMain.o build/assembler.o build/trit.o build/tryteMath.o build/stdmac.o
 
 bin/tricat.out:	build/tricat.o build/trit.o build/tryteMath.o
 	$(STEM) -o bin/tricat.out build/tricat.o build/trit.o build/tryteMath.o

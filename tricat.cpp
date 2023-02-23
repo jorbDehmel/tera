@@ -50,12 +50,13 @@ int main(const int argc, const char *argv[])
             {
                 cout << '\n';
             }
-            cout << i << "\t| ";
+            cout << i << "\t|\t";
         }
 
-        cout << out[i] << '\t';
+        cout << out[i] << "\t\t";
     }
-    cout << '\n';
+    cout << '\n'
+         << "Size: " << out.size() << " trytes\n";
 
     return 0;
 }

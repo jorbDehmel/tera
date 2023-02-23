@@ -16,8 +16,6 @@ MIT licence via mit-license.org held by author
 #include "src/tags.hpp"
 using namespace std;
 
-#define TIMER
-
 int main(const int argc, const char *argv[])
 {
     if (argc != 2)
@@ -86,6 +84,11 @@ int main(const int argc, const char *argv[])
     auto end = chrono::high_resolution_clock::now();
     long int ellapsed = chrono::duration_cast<chrono::nanoseconds>(end - begin).count();
     cout << "Nanoseconds: " << ellapsed << '\n';
+
+    for (auto item : instrTimes)
+    {
+        cout << "Instr: " << item.first << " av ns: " << item.second.first / item.second.second << '\n';
+    }
 #else
     while (c.doInstr() == 0)
     {

@@ -25,11 +25,11 @@ string print(Assembler &Caller, const string &Arg)
 
         if (Arg[i] == ' ')
         {
-            out += "SPACE\n";
+            out += "*SPACE\n";
         }
         else if (Arg[i] == '\t')
         {
-            out += "TAB\n";
+            out += "*TAB\n";
         }
         else
         {
@@ -63,18 +63,18 @@ string println(Assembler &Caller, const string &Arg)
 
         if (Arg[i] == ' ')
         {
-            out += "SPACE\n";
+            out += "*SPACE\n";
         }
         else if (Arg[i] == '\t')
         {
-            out += "TAB\n";
+            out += "*TAB\n";
         }
         else
         {
             out += string("-") + Arg[i] + "\n";
         }
     }
-    out += "put ^__PRINT_TEMP." + to_string(size - 1) + " ENDL\n";
+    out += "put ^__PRINT_TEMP." + to_string(size - 1) + " *ENDL\n";
 
     // Out by the size of the variable
     out += "out __PRINT_TEMP " + to_string(size) + "\n";
@@ -155,6 +155,17 @@ string copyVars(Assembler &Caller, const string &Arg)
 string zeroOut(Assembler &Caller, const string &Arg)
 {
     string out;
+
+    if (Caller.variables.count(Arg) == 0)
+    {
+        cout << "Var dump:\n";
+        for (auto v : Caller.variables)
+        {
+            cout << '\t' << v.first << '\n';
+        }
+
+        throw macro_error("Invalid variable '" + Arg + "' could not be zeroed");
+    }
 
     int size = (int)Caller.variables[Arg].second;
     for (int i = 0; i < size; i++)

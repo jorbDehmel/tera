@@ -9,7 +9,6 @@ MIT licence via mit-license.org held by author
 #include "assembler.hpp"
 
 #define INSTRSTART (MEMSIZE * 2 / 3)
-
 #define CHAR_OFFSET 13'122
 
 Assembler::Assembler()
@@ -50,6 +49,7 @@ Assembler::Assembler()
     instructions["divV"] = divV;
 
     instructions["modV"] = modV;
+    instructions["ifNever"] = ifNever;
 
     // Buffer address variables (non-stack)
     variables["INSTR"] = var(0, 1);
@@ -64,6 +64,7 @@ Assembler::Assembler()
     // No argument instructions
     noArgs.insert("kill");
     noArgs.insert("ifControl");
+    noArgs.insert("ifNever");
     noArgs.insert("endif");
 
     // Include standard macros
@@ -94,7 +95,6 @@ _ base 27 literal (_0qf)
 ^ pointer arithmatic ^VARNAME.-12
 $ sizeof
 */
-const string preprocCharacters = "*+.~_/";
 
 string handleScope(const string &Prefix, const string &VarName)
 {
@@ -125,11 +125,6 @@ string handleScope(const string &Prefix, const string &VarName)
 
 trit_assembly Assembler::assemble(const string &What)
 {
-#ifdef DEBUG
-    cout << "Before macros:\n"
-         << What << '\n';
-#endif
-
     cout << "Premacro pass...\n";
     stringstream temp;
     temp << What;
@@ -137,6 +132,11 @@ trit_assembly Assembler::assemble(const string &What)
     string line;
     while (getline(temp, line))
     {
+        while (line[0] == ' ' || line[0] == '\t')
+        {
+            line = line.substr(1);
+        }
+
         if (line[0] == '.')
         {
             stringstream extract;
@@ -166,6 +166,10 @@ trit_assembly Assembler::assemble(const string &What)
         while (!preMacro.eof())
         {
             getline(preMacro, instr);
+            while (instr[0] == ' ' || instr[0] == '\t')
+            {
+                instr = instr.substr(1);
+            }
 
             if (instr[0] == '#')
             {
@@ -191,11 +195,6 @@ trit_assembly Assembler::assemble(const string &What)
             }
         }
     } while (postMacro.find('#') != string::npos);
-
-#ifdef DEBUG
-    cout << "After macros:\n"
-         << postMacro << '\n';
-#endif
 
     // Compilation pass
     stringstream code;
@@ -321,44 +320,14 @@ trit_assembly Assembler::assemble(const string &What)
         }
         else if (instr[0] == '{')
         {
+            // Call CPU's integrated function jumper
+            out += encode(ifNever) + encode(tryte(0)) + encode(tryte(0));
+
             string name = instr.substr(1);
-            functions[name] = (INSTRSTART + out.size() / 3) + 3;
+            functions[name] = (INSTRSTART + out.size() / 3);
             prefix = "+" + prefix;
 
-            auto position = code.tellg();
-            tryte jumpBy(3);
-
-            // find corrosponding end brace
-            int numBraces = 1;
-            string cur;
-            do
-            {
-                code >> cur;
-
-                if (cur[0] == '{')
-                {
-                    numBraces++;
-                }
-                else if (cur[0] == '}')
-                {
-                    numBraces--;
-                }
-                else if (cur == "!return")
-                {
-                    jumpBy += 3;
-                }
-                else if (preprocCharacters.find(cur[0]) == string::npos)
-                {
-                    // not a preproc statement; 3 of these make an instruction
-                    jumpBy++;
-                }
-            } while (numBraces != 0);
-            jumpBy /= tryte(3);
-
-            // add jump to corrosponding end brace
-            out += encode(jump) + encode(tryte(0)) + encode(jumpBy);
-
-            code.seekg(position);
+            cout << "Started function " << name << '\n';
         }
         else if (instr[0] == '}')
         {
@@ -367,7 +336,12 @@ trit_assembly Assembler::assemble(const string &What)
                 throw runtime_error("Error: Cannot end global scope");
             }
 
+            cout << "Ended function\n";
+
             prefix = prefix.substr(1);
+
+            // End CPU's integrated function jumper
+            out += encode(endif) + encode(tryte(0)) + encode(tryte(0));
         }
         else if (instr[0] == '!')
         {

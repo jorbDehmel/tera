@@ -29,7 +29,7 @@ cpp hello world:
     6'460.65 ns
 
 tera hello world:
-    36'536'288 ns
+    142'887 ns
 
 16-bit hello world:
     174'124 ns
@@ -40,8 +40,17 @@ tera hello world:
 #ifndef TRITCPU_HPP
 #define TRITCPU_HPP
 
+#undef DEBUG
+#undef TIMER
+
 #include "tryteMath.hpp"
 #include <vector>
+#include <chrono>
+#include <map>
+
+#ifdef TIMER
+extern map<tryte, pair<double, int>> instrTimes;
+#endif
 
 #define MEMSIZE (int)19'683
 #define INSTRSIZE 19'683
@@ -75,6 +84,7 @@ enum instr
     multV,      // 00m 000'000'211
     divV,       // 00n 000'000'212
     modV,       // 00o 000'000'220
+    ifNever,    // 00p 000'000'221
 };
 
 enum buffers
