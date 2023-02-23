@@ -44,7 +44,7 @@ TritCpu::TritCpu(tryte *Sectors[26])
 
 void TritCpu::loadProgram(vector<tryte> &Program)
 {
-    for (int i = 0; i < Program.size(); i++)
+    for (int i = 0; i < (int)Program.size(); i++)
     {
         mem[(int)(*instrPointer) + i] = Program[i];
     }

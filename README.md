@@ -10,12 +10,17 @@ github.com/jorbDehmel/tera.git
 
 I'm bored and I have nothing better to do.
 
-## Overview
+## Overview: Tera, Terace, and Deco
 
 Tera is a base-3 CPU simulator. It runs .tera files which are
-compiled by terace, the Tera assembler. Terace takes in .tasl
-(ternary assembly language) files. Deco is the Tera decompiler, which takes .tera files and outputs a possible .tasl
+compiled by Terace, the Tera assembler. Terace takes in .tasl
+(ternary assembly language) files. Deco is the Tera decompiler,
+which takes .tera files and outputs a possible .tasl
 source.
+
+Tera - TERnAry cpu
+Terace - TERA ASSembler (Abbreviation works verbally)
+Deco - DECOmpiler
 
 ## Use
 
@@ -27,7 +32,7 @@ To make these executables callable from anywhere (Linux only):
 
 `make install`
 
-To remove Tera binaries from your system:
+To remove Tera binaries from your system (Linux only):
 
 `make uninstall`
 
@@ -95,14 +100,16 @@ Does the same as #print and prints a newline.
 
 **#req ARG_1 ARG_2 ... ARG_N**
 
-Ensures that all passed arguments are the names of variables in the current scope.
+Ensures that all passed arguments are the names of variables in
+the current scope.
 
 > #req VAR1 VAR2
 > / some operation using VAR1 and VAR2
 
 **#cpy FROM TO**
 
-Copy each tryte in one variable to its relative position in another.
+Copy each tryte in one variable to its relative position in
+another.
 
 > .VAR 9
 > put ^VAR.3 -Y
@@ -114,11 +121,15 @@ Copy each tryte in one variable to its relative position in another.
 > .VAR 9
 > #zero VAR
 
-Set every tryte within VAR to zero. This is important as memory is not reset when a variable is freed from the stack.
+Set every tryte within VAR to zero. This is important as
+memory is not reset when a variable is freed from the stack.
 
 ## Useful information for my definition of a tryte
 
-After finishing the majority of this project, I discovered that the definitions I made up are not universal. For the purposes of this project, I will be asserting that I am right and everyone else is wrong. Here are my definitions.
+After finishing the majority of this project, I discovered
+that the definitions I made up are not universal. For the
+purposes of this project, I will be asserting that I am
+right and everyone else is wrong. Here are my definitions.
 
 1 trit = A zero, one or two
 
@@ -132,7 +143,8 @@ After finishing the majority of this project, I discovered that the definitions 
 
 ## Instruction layout
 
-A full instruction consists of a 1 tryte instruction, a 1 tryte address, and a 1 tryte literal.
+A full instruction consists of a 1 tryte instruction, a 1
+tryte address, and a 1 tryte literal.
 
 **Example**: Put "456" into memory position 123
 
@@ -154,9 +166,13 @@ Where to jump back to after completing a function call.
 
 ## Misc
 
-Minimum working memory (1 sector): 19'683 trytes = 1 kilotryte ~= 1400 kb
+Minimum working memory (1 sector):
 
-Maximum working memory (27 sectors): 531'441 trytes = 27 kilotryte ~= 40 mb
+19'683 trytes = 1 kilotryte ~= 1400 kb
+
+Maximum working memory (27 sectors):
+
+531'441 trytes = 27 kilotryte ~= 40 mb
 
 .tasl file: Ternary ASsembly Language file
 
@@ -352,10 +368,14 @@ although if you shifted this value up some amount it would translate 1 to
 
 ## Character and integer printing
 
-When outputting a tryte to the CPU output stream, the following definitions are used.
+When outputting a tryte to the CPU output stream, the following definitions
+are used.
 
-If the tryte has a 0 in the largest trit, it is outputted as a positive integer. This is followed by a newline.
+If the tryte has a 0 in the largest trit, it is outputted as a positive
+integer. This is followed by a newline.
 
-If the tryte has a 1 in the largest trit, it is outputted as a negative integer (just a minus followed by its value, leading to -0). This is followed by a newline.
+If the tryte has a 1 in the largest trit, it is outputted as a negative
+integer (just a minus followed by its value, leading to -0). This is
+followed by a newline.
 
 If the tryte has a 2 in the largest trit, it is outputted as a C++ char.

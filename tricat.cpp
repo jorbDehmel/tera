@@ -42,7 +42,7 @@ int main(const int argc, const char *argv[])
 
     auto out = rawParseTrytes(text);
 
-    for (int i = 0; i < out.size(); i++)
+    for (int i = 0; i < (int)out.size(); i++)
     {
         if (i % 3 == 0)
         {

@@ -83,7 +83,7 @@ string handleScope(const string &Prefix, const string &VarName)
     if (VarName[0] == '+')
     {
         string tempname = Prefix + VarName;
-        for (int i = 0; i < VarName.size() && VarName[i] == '+'; i++)
+        for (int i = 0; i < (int)VarName.size() && VarName[i] == '+'; i++)
         {
             if (tempname[0] != '+')
             {
@@ -156,7 +156,7 @@ trit_assembly Assembler::assemble(const string &What)
             if (instr[0] == '#')
             {
                 string name;
-                for (int i = 1; i < instr.size() && instr[i] != ' '; i++)
+                for (int i = 1; i < (int)instr.size() && instr[i] != ' '; i++)
                 {
                     name += instr[i];
                 }
@@ -226,7 +226,7 @@ trit_assembly Assembler::assemble(const string &What)
                 name += arg[ind];
                 ind++;
 
-                if (ind >= arg.size())
+                if (ind >= (int)arg.size())
                 {
                     throw runtime_error("Invalid usage of pointer arithmatic operator");
                 }
@@ -391,7 +391,7 @@ trit_assembly Assembler::assemble(const string &What)
             {
                 out += encode(tryte(stoi(instr)));
             }
-            catch (invalid_argument e)
+            catch (invalid_argument &e)
             {
                 throw runtime_error("Invalid symbol '" + prefix + instr + "'");
             }

@@ -178,7 +178,7 @@ vector<tryte> trytesFromBase27(const string &Base27)
     string key = "0123456789abcdefghijklmnopq";
     vector<tryte> out;
 
-    for (int i = 0; i < Base27.size();)
+    for (int i = 0; i < (int)Base27.size();)
     {
         // Convert to decimal
         short dec = key.find(Base27[i]) * 27 * 27;
@@ -201,7 +201,7 @@ vector<tryte> rawParseTrytes(const string &From)
 {
     vector<tryte> out;
 
-    for (int i = 0; i < From.size(); i += 3)
+    for (int i = 0; i < (int)From.size(); i += 3)
     {
         if (From[i + 2] > 27 || From[i + 1] > 27 || From[i] > 27)
         {

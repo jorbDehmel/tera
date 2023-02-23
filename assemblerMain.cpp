@@ -74,7 +74,15 @@ int main(const int argc, const char *argv[])
         Assembler a;
         assembled = a.assemble(toAssemble);
     }
-    catch (runtime_error e)
+    catch (macro_error &e)
+    {
+        cout << tags::red_bold
+             << "Error: Macro failed.\n"
+             << e.what() << '\n'
+             << tags::reset;
+        return 6;
+    }
+    catch (runtime_error &e)
     {
         cout << tags::red_bold
              << "Error: Assembly failed.\n"

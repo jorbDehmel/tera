@@ -13,7 +13,7 @@ string print(Assembler &Caller, const string &Arg)
     string out;
 
     // Determine size to print
-    unsigned int size = Arg.size();
+    int size = Arg.size();
 
     // Allocate appropriately sized variable
     out += ".__PRINT_TEMP " + to_string(size) + "\n";
@@ -51,7 +51,7 @@ string println(Assembler &Caller, const string &Arg)
     string out;
 
     // Determine size to print
-    unsigned int size = Arg.size() + 1;
+    int size = Arg.size() + 1;
 
     // Allocate appropriately sized variable
     out += ".__PRINT_TEMP " + to_string(size) + "\n";
@@ -91,7 +91,7 @@ string req(Assembler &Caller, const string &Arg)
 
     vector<string> vars;
     string temp;
-    for (int i = 0; i < Arg.size(); i++)
+    for (int i = 0; i < (int)Arg.size(); i++)
     {
         if (Arg[i] == ' ')
         {
