@@ -222,45 +222,49 @@ If the control is zero, jump past the corrosponding endif.
 
 Terminates an if statement.
 
-> andEq ADDRESS LITERAL
+> andEqV ADDRESS_1 ADDRESS_2
 
 The control buffer is set to one if it is one and the thing at
-ADDRESS matches the literal. Otherwise, it is set to zero.
+the first address matches the thing at the second address.
+Otherwise, it is set to zero.
 
-> andNeq ADDRESS LITERAL
-
-The control buffer is set to one if it is one and the thing at
-ADDRESS does not match the literal. Otherwise, it is set to zero.
-
-> andLess ADDRESS LITERAL
+> andNeqV ADDRESS_1 ADDRESS_2
 
 The control buffer is set to one if it is one and the thing at
-ADDRESS is less than literal. Otherwise, it is set to zero.
+the first address does not match the thing at the second.
+Otherwise, it is set to zero.
 
-> andGreater ADDRESS LITERAL
+> andLessV ADDRESS_1 ADDRESS_2
 
 The control buffer is set to one if it is one and the thing at
-ADDRESS is greater than the literal. Otherwise, it is set to zero.
+the first address is less than the thing at the second one.
+Otherwise, it is set to zero.
 
-> orEq ADDRESS LITERAL
+> andGreaterV ADDRESS_1 ADDRESS_2
 
-The control buffer is set to one if the thing at ADDRESS is equal to
-the literal.
+The control buffer is set to one if it is one and the thing at
+the first address is greater than the second. Otherwise, it is set
+to zero.
 
-> orNeq ADDRESS LITERAL
+> orEqV ADDRESS_1 ADDRESS_2
 
-The control buffer is set to one if the thing at ADDRESS is not equal
-to the literal.
+The control buffer is set to one if the thing at the first address
+is equal to the second.
 
-> orLess ADDRESS LITERAL
+> orNeqV ADDRESS_1 ADDRESS_2
 
-The control buffer is set to one if the thing at ADDRESS is less than
-the literal.
+The control buffer is set to one if the thing at the first address
+is not equal to the second.
 
-> orGreater ADDRESS LITERAL
+> orLessV ADDRESS_1 ADDRESS_2
 
-The control buffer is set to one if the thing at ADDRESS is greater
-than the literal.
+The control buffer is set to one if the thing at the first address
+is less than the second.
+
+> orGreaterV ADDRESS_1 ADDRESS_2
+
+The control buffer is set to one if the thing at the first address
+is greater than the second.
 
 > out ADDRESS LITERAL
 

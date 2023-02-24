@@ -28,32 +28,32 @@ extern map<tryte, pair<double, int>> instrTimes;
 // Thus, the following enumeration is valid for direct casting to trytes.
 enum instr
 {
-    kill = 0,   // 000 000'000'000 NOARG
-    put,        // 001 000'000'001
-    cpy,        // 002 000'000'002
-    incr,       // 003 000'000'010
-    decr,       // 004 000'000'011
-    jump,       // 005 000'000'012
-    jumpBack,   // 006 000'000'020
-    ifControl,  // 007 000'000'021 NOARG
-    endif,      // 008 000'000'022 NOARG
-    andEq,      // 009 000'000'100
-    andNeq,     // 00a 000'000'101
-    andLess,    // 00b 000'000'102
-    andGreater, // 00c 000'000'110
-    orEq,       // 00d 000'000'111
-    orNeq,      // 00e 000'000'112
-    orLess,     // 00f 000'000'120
-    orGreater,  // 00g 000'000'121
-    out,        // 00h 000'000'122
-    inp,        // 00i 000'000'200
-    sector,     // 00j 000'000'201
-    addV,       // 00k 000'000'202
-    subtractV,  // 00l 000'000'210
-    multV,      // 00m 000'000'211
-    divV,       // 00n 000'000'212
-    modV,       // 00o 000'000'220
-    ifNever,    // 00p 000'000'221
+    kill = 0,    // 000 000'000'000 NOARG
+    put,         // 001 000'000'001
+    cpy,         // 002 000'000'002
+    incr,        // 003 000'000'010
+    decr,        // 004 000'000'011
+    jump,        // 005 000'000'012
+    jumpBack,    // 006 000'000'020
+    ifControl,   // 007 000'000'021 NOARG
+    endif,       // 008 000'000'022 NOARG
+    andEqV,      // 009 000'000'100
+    andNeqV,     // 00a 000'000'101
+    andLessV,    // 00b 000'000'102
+    andGreaterV, // 00c 000'000'110
+    orEqV,       // 00d 000'000'111
+    orNeqV,      // 00e 000'000'112
+    orLessV,     // 00f 000'000'120
+    orGreaterV,  // 00g 000'000'121
+    out,         // 00h 000'000'122
+    inp,         // 00i 000'000'200
+    sector,      // 00j 000'000'201
+    addV,        // 00k 000'000'202
+    subtractV,   // 00l 000'000'210
+    multV,       // 00m 000'000'211
+    divV,        // 00n 000'000'212
+    modV,        // 00o 000'000'220
+    ifNever,     // 00p 000'000'221
 };
 
 enum buffers

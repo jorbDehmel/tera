@@ -124,10 +124,10 @@ int TritCpu::doInstr()
         break;
     case endif:
         break;
-    case andEq:
+    case andEqV:
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            if (curSector[*addr] == curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -137,10 +137,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case andNeq:
+    case andNeqV:
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] != *lit)
+            if (curSector[*addr] != curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -150,10 +150,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case andLess:
+    case andLessV:
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] < *lit)
+            if (curSector[*addr] < curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -163,10 +163,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case andGreater:
+    case andGreaterV:
         if (*controlBuffer != tryte(0))
         {
-            if (curSector[*addr] > *lit)
+            if (curSector[*addr] > curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -176,10 +176,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case orEq:
+    case orEqV:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] == *lit)
+            if (curSector[*addr] == curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -189,10 +189,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case orNeq:
+    case orNeqV:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] != *lit)
+            if (curSector[*addr] != curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -202,10 +202,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case orLess:
+    case orLessV:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] < *lit)
+            if (curSector[*addr] < curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }
@@ -215,10 +215,10 @@ int TritCpu::doInstr()
             }
         }
         break;
-    case orGreater:
+    case orGreaterV:
         if (*controlBuffer == tryte(0))
         {
-            if (curSector[*addr] > *lit)
+            if (curSector[*addr] > curSector[*lit])
             {
                 *controlBuffer = tryte(19'682);
             }

@@ -28,16 +28,16 @@ Assembler::Assembler()
     instructions["ifControl"] = ifControl;
     instructions["endif"] = endif;
 
-    instructions["andEq"] = andEq;
-    instructions["andNeq"] = andNeq;
-    instructions["andLess"] = andLess;
+    instructions["andEqV"] = andEqV;
+    instructions["andNeqV"] = andNeqV;
+    instructions["andLessV"] = andLessV;
 
-    instructions["andGreater"] = andGreater;
-    instructions["orEq"] = orEq;
-    instructions["orNeq"] = orNeq;
+    instructions["andGreaterV"] = andGreaterV;
+    instructions["orEqV"] = orEqV;
+    instructions["orNeqV"] = orNeqV;
 
-    instructions["orLess"] = orLess;
-    instructions["orGreater"] = orGreater;
+    instructions["orLessV"] = orLessV;
+    instructions["orGreaterV"] = orGreaterV;
     instructions["out"] = out;
 
     instructions["inp"] = inp;
