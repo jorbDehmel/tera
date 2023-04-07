@@ -201,7 +201,7 @@ vector<tryte> rawParseTrytes(const string &From)
 {
     vector<tryte> out;
 
-    for (int i = 0; i < (int)From.size(); i += 3)
+    for (int i = 0; i + 3 < (int)From.size(); i += 3)
     {
         if (From[i + 2] > 27 || From[i + 1] > 27 || From[i] > 27)
         {
