@@ -69,7 +69,7 @@ public:
     unsigned short data = 0;
 };
 
-// Parses from encoded stringx
+// Parses from encoded string
 vector<tryte> trytesFromBase27(const string &Base27);
 
 // Parses from raw chars, IE not encoded
