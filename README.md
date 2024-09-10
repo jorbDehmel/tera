@@ -1,14 +1,10 @@
 # Tera
 ## A base-3 cpu simulator
-Jordan "Jorb" Dehmel, 2023
+Jordan "Jorb" Dehmel, 2023 - present
 
 jdehmel@outlook.com
 
 github.com/jorbDehmel/tera.git
-
-## Motivation
-
-I'm bored and I have nothing better to do.
 
 ## Overview: Tera, Terace, Tricat and Deco
 
